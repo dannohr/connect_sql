@@ -1,15 +1,12 @@
-# My Working Example
+# Collection of things used in my attempt to conenct to MSSQL Server
 
 Token Website:
 https://medium.freecodecamp.org/securing-node-js-restful-apis-with-json-web-tokens-9f811a92bb52
 
-
 # Datamigrations
+
 sequelize db:migrate
 sequelize db:migrate:undo
-
-
-
 
 This repository demonstrates the usage of Sequelize within an [Express](https://expressjs.com) application.
 The implemented logic is a simple task tracking tool.
