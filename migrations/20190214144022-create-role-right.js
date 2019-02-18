@@ -2,15 +2,15 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("UserCompany", {
+    return queryInterface.createTable("UserRoleRight", {
       id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4
+        type: Sequelize.INTEGER
       },
-      userId: {
-        type: Sequelize.UUID,
+      userRoleId: {
+        type: Sequelize.INTEGER,
         onDelete: "CASCADE",
         allowNull: false,
         references: {
@@ -18,8 +18,8 @@ module.exports = {
           key: "id"
         }
       },
-      companyId: {
-        type: Sequelize.UUID,
+      userRightId: {
+        type: Sequelize.INTEGER,
         onDelete: "CASCADE",
         allowNull: false,
         references: {
@@ -39,6 +39,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("UserCompany");
+    return queryInterface.dropTable("UserRoleRight");
   }
 };

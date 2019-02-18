@@ -12,25 +12,49 @@ var bcrypt = require("bcryptjs");
 var config = require("../config/config");
 var VerifyToken = require("./VerifyToken");
 
+var tokenExpiresIn = 3600; //3600 =  1 hour, 86400 = 24 hours
+
 router.post("/register", function(req, res) {
   var hashedPassword = bcrypt.hashSync(req.body.password, 8);
 
-  db.User.create({
-    name: req.body.name,
-    username: req.body.username,
-    password: hashedPassword
+  // First check and see if username already exists
+  db.User.findOne({
+    where: {
+      username: req.body.username
+    }
   })
     .then(user => {
-      // create a token
-      var token = jwt.sign({ id: user.id }, config.jwt_secret, {
-        // expiresIn: 86400 // expires in 24 hours
-        expiresIn: 3600
-      });
-
-      res.status(200).send({ auth: true, token: token });
+      console.log(user);
+      // Create new user
+      if (!user) {
+        db.User.create({
+          name: req.body.name,
+          username: req.body.username,
+          password: hashedPassword
+        })
+          .then(user => {
+            // create a token
+            var token = jwt.sign({ id: user.id }, config.jwt_secret, {
+              expiresIn: tokenExpiresIn
+            });
+            res.status(200).send({ auth: true, token: token });
+          })
+          .catch(err => {
+            return res
+              .status(500)
+              .send("There was a problem registering the user.");
+          });
+      } else {
+        // Username already exists
+        return res.status(200).send({
+          auth: false,
+          token: null,
+          error: "Username already exists."
+        });
+      }
     })
     .catch(err => {
-      return res.status(500).send("There was a problem registering the user.");
+      res.status(500).send("There was a problem finding the user.");
     });
 });
 
@@ -48,37 +72,60 @@ router.get("/me", VerifyToken, function(req, res, next) {
 });
 
 router.post("/login", function(req, res) {
-  console.log(req.body.username);
   db.User.findOne({
+    attributes: { exclude: ["createdAt", "updatedAt"] },
+
+    include: [
+      {
+        model: db.Company,
+        attributes: {
+          exclude: ["createdAt", "updatedAt"]
+        },
+        through: {
+          attributes: { exclude: ["createdAt", "updatedAt"] }
+        }
+      }
+    ],
+
     where: {
       username: req.body.username
     }
   })
 
-    // findOne({})
     .then(user => {
-      console.log(user);
       if (!user) return res.status(404).send("No user found.");
 
-      // console.log(user);
       var passwordIsValid = bcrypt.compareSync(
         req.body.password,
         user.password
       );
-      console.log(passwordIsValid);
 
       if (!passwordIsValid) {
-        return res.status(401).send({ auth: false, token: null });
+        return res.status(401).send({ auth: false, token: null, user: null });
       }
 
       var token = jwt.sign({ id: user._id }, config.jwt_secret, {
-        expiresIn: 86400 // expires in 24 hours
+        expiresIn: tokenExpiresIn
       });
 
-      res.status(200).send({ auth: true, token: token });
+      var currentUser = user.dataValues;
+      delete currentUser.password;
+
+      // db.UserCompany.findAll({
+      //   where: { userId: currentUser.id }
+      // }).then(usercompany => {
+      //   console.log(usercompany.dataValues);
+      res
+        .status(200)
+        .send({ auth: true, token: token, currentUser: currentUser });
+      //   });
     })
     .catch(err => {
-      return res.status(500).send("Error on the server.");
+      console.log(err);
+      return res
+        .status(500)
+        .send({ message: "Error on the server.", error: err });
     });
 });
+
 module.exports = router;

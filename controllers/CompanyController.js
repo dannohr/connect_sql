@@ -13,7 +13,8 @@ router.get("/", function(req, res) {
 });
 
 // RETURN COMPANY BY ID
-router.get("/:id?", (req, res) => {
+router.get("/:id", (req, res) => {
+  console.log("looking for id:", req.params.id);
   let query;
   if (req.params.id) {
     query = db.Company.findById(req.params.id);

@@ -6,8 +6,8 @@ module.exports = (sequelize, DataTypes) => {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4
+        type: DataTypes.INTEGER,
+        defaultValue: DataTypes.INTEGER
       },
       email: DataTypes.STRING,
       password: { type: DataTypes.STRING, allowNull: false },
@@ -16,11 +16,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  User.associate = function(models) {
+
+  User.associate = models => {
     User.belongsToMany(models.Company, {
-      through: models.UserCompany,
-      foreignKey: "userId"
+      through: models.UserCompany
     });
   };
+
   return User;
 };

@@ -3,15 +3,21 @@
 Token Website:
 https://medium.freecodecamp.org/securing-node-js-restful-apis-with-json-web-tokens-9f811a92bb52
 
-# Datamigrations
+# Data Migrations
 
 sequelize db:migrate
+
 sequelize db:migrate:undo
+sequelize db:migrate:undo:all
 
-This repository demonstrates the usage of Sequelize within an [Express](https://expressjs.com) application.
-The implemented logic is a simple task tracking tool.
+# Data Migrations
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+seed:generate --name pick-any-name
+
+sequelize db:seed:all
+
+sequelize db:seed:undo
+sequelize db:seed:undo:all
 
 ## Starting App
 
@@ -29,9 +35,6 @@ npm install
 node_modules/.bin/sequelize db:migrate
 npm start
 ```
-
-This will start the application and create an sqlite database in your app dir.
-Just open [http://localhost:3000](http://localhost:3000).
 
 ## Running Tests
 

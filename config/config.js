@@ -1,16 +1,21 @@
 module.exports = {
   development: {
-    username: "sql",
-    password: "sql",
-    database: "db",
-    host: "192.168.2.50",
+    username: "user",
+    password: "password",
+    database: "app",
+    host: "dbserver",
     dialect: "mssql",
     dialectOptions: {
       encrypt: true
     },
     define: {
       freezeTableName: true
-    }
+    },
+    operatorsAliases: false,
+    // seederStorageTableName: "SequelizeData",
+    seederStorage: "sequelize"
+    // seederStorage: "json",
+    // logging: console.log
   },
   test: {
     dialect: "sqlite",
