@@ -9,8 +9,9 @@ const db = require("../models/index");
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
-var config = require("../config/config");
+var config = require("../config/sequelizeConfig");
 var VerifyToken = require("./VerifyToken");
+const getUser = require("./common/getUser");
 
 var tokenExpiresIn = 3600; //3600 =  1 hour, 86400 = 24 hours
 
@@ -59,33 +60,34 @@ router.post("/register", function(req, res) {
 });
 
 router.get("/me", VerifyToken, function(req, res, next) {
-  db.User.findById(req.userId, {
-    attributes: { exclude: ["password", "createdAt", "updatedAt"] }
-  })
-    .then(user => {
-      if (!user) return res.status(404).send("No user found.");
-      res.json(user);
-    })
-    .catch(err => {
-      res.status(500).send("There was a problem finding the user.");
-    });
+  getUser(req.userId);
+  // db.User.findById(req.userId, {
+  //   attributes: { exclude: ["password", "createdAt", "updatedAt"] }
+  // })
+  //   .then(user => {
+  //     if (!user) return res.status(404).send("No user found.");
+  //     res.json(user);
+  //   })
+  //   .catch(err => {
+  //     res.status(500).send("There was a problem finding the user.");
+  //   });
 });
 
 router.post("/login", function(req, res) {
   db.User.findOne({
     attributes: { exclude: ["createdAt", "updatedAt"] },
 
-    include: [
-      {
-        model: db.Company,
-        attributes: {
-          exclude: ["createdAt", "updatedAt"]
-        },
-        through: {
-          attributes: { exclude: ["createdAt", "updatedAt"] }
-        }
-      }
-    ],
+    // include: [
+    //   {
+    //     model: db.Company,
+    //     attributes: {
+    //       exclude: ["createdAt", "updatedAt"]
+    //     },
+    //     through: {
+    //       attributes: { exclude: ["createdAt", "updatedAt"] }
+    //     }
+    //   }
+    // ],
 
     where: {
       username: req.body.username
@@ -93,7 +95,13 @@ router.post("/login", function(req, res) {
   })
 
     .then(user => {
-      if (!user) return res.status(404).send("No user found.");
+      if (!user)
+        return res.status(401).send({
+          auth: false,
+          token: null,
+          user: null,
+          message: "User Not Found"
+        });
 
       var passwordIsValid = bcrypt.compareSync(
         req.body.password,
@@ -101,20 +109,21 @@ router.post("/login", function(req, res) {
       );
 
       if (!passwordIsValid) {
-        return res.status(401).send({ auth: false, token: null, user: null });
+        return res.status(401).send({
+          auth: false,
+          token: null,
+          user: null,
+          message: "Incorrect Password"
+        });
       }
 
-      var token = jwt.sign({ id: user._id }, config.jwt_secret, {
+      var token = jwt.sign({ id: user.id }, config.jwt_secret, {
         expiresIn: tokenExpiresIn
       });
 
       var currentUser = user.dataValues;
       delete currentUser.password;
 
-      // db.UserCompany.findAll({
-      //   where: { userId: currentUser.id }
-      // }).then(usercompany => {
-      //   console.log(usercompany.dataValues);
       res
         .status(200)
         .send({ auth: true, token: token, currentUser: currentUser });

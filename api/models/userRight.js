@@ -1,7 +1,7 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-  const Company = sequelize.define(
-    "Company",
+  const UserRight = sequelize.define(
+    "UserRight",
     {
       id: {
         allowNull: false,
@@ -9,16 +9,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         defaultValue: DataTypes.INTEGER
       },
-      name: DataTypes.STRING
+      rightName: DataTypes.STRING
     },
     {}
   );
 
-  Company.associate = models => {
-    Company.belongsToMany(models.User, {
-      through: models.UserCompany
+  UserRight.associate = function(models) {
+    UserRight.belongsToMany(models.UserRole, {
+      through: models.UserRoleRight
     });
   };
 
-  return Company;
+  return UserRight;
 };

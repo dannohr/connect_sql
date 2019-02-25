@@ -18,6 +18,9 @@
     "jsonwebtoken": "^8.3.0",
     "morgan": "^1.7.0",
     "mssql": "^4.3.2",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
     "pg": "^7.8.0",
     "pug": "^2.0.0-rc.4",
     "sequelize": "^4.42.0",
@@ -26,6 +29,8 @@
     "tedious": "^5.0.3"
   },
   "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0",
     "cross-env": "^5.2.0",
     "expect.js": "^0.3.1",
     "mocha": "^5.2.0",

@@ -18,9 +18,7 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   User.associate = models => {
-    User.belongsToMany(models.Company, {
-      through: models.UserCompany
-    });
+    User.hasMany(models.UserCompany, {});
   };
 
   return User;

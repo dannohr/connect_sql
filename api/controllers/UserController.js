@@ -6,10 +6,11 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
 const db = require("../models/index");
+const getUser = require("./common/getUser");
 
 // RETURNS ALL THE USERS IN THE DATABASE
 router.get("/", function(req, res) {
-  db.User.findAll().then(users => res.json(users));
+  getUser(req, res);
 });
 
 // GET ONE USER

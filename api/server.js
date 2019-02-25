@@ -1,10 +1,13 @@
-var express = require("express");
-var path = require("path");
-var logger = require("morgan");
-var cookieParser = require("cookie-parser");
-var bodyParser = require("body-parser");
+import express from "express";
+import path from "path";
+import logger from "morgan";
+import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
 
-var app = express();
+const app = express();
+const port = process.env.PORT || 3001;
+
+require("config/passportConfig");
 
 app.use(logger("dev"));
 app.use(bodyParser.json());
@@ -24,4 +27,6 @@ app.use("/usercompany", UserCompanyController);
 var AuthController = require("./controllers/AuthController");
 app.use("/auth", AuthController);
 
-module.exports = app;
+app.listen(port, function() {
+  console.log("Express server listening on port " + port);
+});

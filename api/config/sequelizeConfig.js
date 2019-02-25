@@ -1,9 +1,9 @@
 module.exports = {
   development: {
-    username: "user",
-    password: "password",
-    database: "app",
-    host: "dbserver",
+    username: "sa",
+    password: "Password1",
+    database: "rentalApp",
+    host: "192.168.2.50",
     dialect: "mssql",
     dialectOptions: {
       encrypt: true
@@ -13,9 +13,9 @@ module.exports = {
     },
     operatorsAliases: false,
     // seederStorageTableName: "SequelizeData",
-    seederStorage: "sequelize"
+    seederStorage: "sequelize",
     // seederStorage: "json",
-    // logging: console.log
+    logging: false
   },
   test: {
     dialect: "sqlite",
@@ -28,6 +28,5 @@ module.exports = {
     host: process.env.DB_HOSTNAME,
     dialect: "mysql",
     use_env_variable: "DATABASE_URL"
-  },
-  jwt_secret: "mysecretcode"
+  }
 };
