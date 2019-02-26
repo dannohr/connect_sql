@@ -31,7 +31,10 @@ function getUser(req, res, next) {
   if (req.userId) {
     filterBy = { id: req.userId };
   }
-  db.User.findAll(AllUserTables).then(users => res.json(users));
+  db.User.findAll(AllUserTables).then(users => {
+    console.log(users);
+    res.json(users);
+  });
 }
 
 module.exports = getUser;

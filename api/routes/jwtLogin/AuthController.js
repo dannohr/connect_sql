@@ -5,13 +5,13 @@ var bodyParser = require("body-parser");
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
-const db = require("../models/index");
+const db = require("../../models/index");
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
-var config = require("../config/sequelizeConfig");
+var config = require("../../config/jwtConfig");
 var VerifyToken = require("./VerifyToken");
-const getUser = require("./common/getUser");
+// const getUser = require("./common/getUser");
 
 var tokenExpiresIn = 3600; //3600 =  1 hour, 86400 = 24 hours
 
@@ -60,17 +60,17 @@ router.post("/register", function(req, res) {
 });
 
 router.get("/me", VerifyToken, function(req, res, next) {
-  getUser(req.userId);
-  // db.User.findById(req.userId, {
-  //   attributes: { exclude: ["password", "createdAt", "updatedAt"] }
-  // })
-  //   .then(user => {
-  //     if (!user) return res.status(404).send("No user found.");
-  //     res.json(user);
-  //   })
-  //   .catch(err => {
-  //     res.status(500).send("There was a problem finding the user.");
-  //   });
+  // getUser(req.userId);
+  db.User.findById(req.userId, {
+    attributes: { exclude: ["password", "createdAt", "updatedAt"] }
+  })
+    .then(user => {
+      if (!user) return res.status(404).send("No user found.");
+      res.json(user);
+    })
+    .catch(err => {
+      res.status(500).send("There was a problem finding the user.");
+    });
 });
 
 router.post("/login", function(req, res) {
@@ -117,7 +117,7 @@ router.post("/login", function(req, res) {
         });
       }
 
-      var token = jwt.sign({ id: user.id }, config.jwt_secret, {
+      var token = jwt.sign({ id: user.id }, config.secret, {
         expiresIn: tokenExpiresIn
       });
 
