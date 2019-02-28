@@ -85,7 +85,7 @@ export default class Signup extends Component {
 
   renderForm() {
     return (
-      <p>test</p>
+      <p className="text-center">This is the signup page</p>
       // <form onSubmit={this.handleSubmit}>
       //   <FormGroup controlId="username" bsSize="large">
       //     <ControlLabel>Username</ControlLabel>

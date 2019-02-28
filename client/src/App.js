@@ -4,7 +4,7 @@ import axios from "axios";
 import "./App.css";
 import Routes from "./Routes";
 import NavMenu from "./containers/NavMenu/NavMenu";
-import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
+import Footer from "./containers/Footer/Footer";
 
 class App extends Component {
   constructor(props) {
@@ -84,10 +84,11 @@ class App extends Component {
 
     return (
       !this.state.isAuthenticating && (
-        <div className="App container">
+        <div className="App">
           {/* above div creates a fixed width container */}
           <NavMenu childProps={childProps} />
           <Routes childProps={childProps} />
+          <Footer childProps={childProps} />
         </div>
       )
     );

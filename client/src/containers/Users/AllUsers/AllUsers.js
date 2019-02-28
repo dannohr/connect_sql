@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import BootstrapTable from "react-bootstrap-table-next";
-// import LoaderButton from "../components/LoaderButton";
+import { MDBDataTable, MDBContainer } from "mdbreact";
 import "./AllUsers.css";
 
 export default class AllUsers extends Component {
@@ -55,39 +54,51 @@ export default class AllUsers extends Component {
   }
 
   render() {
-    const users = this.state.allUsers;
-    const columns = [
-      {
-        dataField: "userId",
-        text: "User ID"
-      },
-      {
-        dataField: "name",
-        text: "Name",
-        sort: true
-      },
-      {
-        dataField: "username",
-        text: "Username",
-        sort: true
-      },
-      {
-        dataField: "email",
-        text: "email",
-        sort: true
-      }
-    ];
+    // const users = this.state.allUsers;
+    const users = this.state.allUsers.map(user => {
+      return {
+        userId: user.userId,
+        name: user.name,
+        username: user.username,
+        email: user.email
+      };
+    });
 
+    const data = {
+      columns: [
+        {
+          label: "User ID",
+          field: "userId",
+          sort: "asc",
+          width: 150
+        },
+        {
+          label: "Name",
+          field: "name",
+          sort: "asc",
+          width: 270
+        },
+        {
+          label: "Username",
+          field: "username",
+          sort: "asc",
+          width: 200
+        },
+        {
+          label: "email",
+          field: "email",
+          sort: "asc",
+          width: 100
+        }
+      ],
+      rows: users
+    };
+    console.log(data);
     return (
-      <div>
+      <MDBContainer>
         <h1>List of all users in database</h1>
-        <BootstrapTable
-          keyField="userId"
-          data={users}
-          columns={columns}
-          bootstrap4
-        />
-      </div>
+        <MDBDataTable striped bordered hover data={data} />
+      </MDBContainer>
     );
   }
 }

@@ -1,13 +1,32 @@
 import React, { Component, Fragment } from "react";
 import { withRouter } from "react-router-dom";
-import { Nav, Navbar, NavDropdown } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
 import "./NavMenu.css";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  MDBNavbar,
+  MDBNavbarBrand,
+  MDBNavbarNav,
+  MDBNavItem,
+  MDBNavLink,
+  MDBNavbarToggler,
+  MDBCollapse,
+  MDBDropdown,
+  MDBDropdownToggle,
+  MDBDropdownMenu,
+  MDBDropdownItem,
+  MDBContainer,
+  MDBIcon
+} from "mdbreact";
 
 class NavMenu extends Component {
+  state = {
+    collapseID: ""
+  };
+
+  toggleCollapse = collapseID => () =>
+    this.setState(prevState => ({
+      collapseID: prevState.collapseID !== collapseID ? collapseID : ""
+    }));
+
   handleLogout = event => {
     this.props.childProps.userHasAuthenticated(false);
     localStorage.removeItem("JWT");
@@ -16,97 +35,94 @@ class NavMenu extends Component {
 
   render() {
     return (
-      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav">
-          {this.props.childProps.isAuthenticated ? (
-            <Navbar.Text>
-              Signed in as: {this.props.childProps.username} {"   ("}
-              {this.props.childProps.companyName} {")"}
-            </Navbar.Text>
-          ) : null}
-
-          <Nav className="ml-auto">
+      <MDBContainer fluid>
+        <MDBNavbar
+          color="info-color"
+          dark
+          expand="md"
+          style={{ marginTop: "0px" }}
+        >
+          <MDBNavbarBrand>App</MDBNavbarBrand>
+          <MDBNavbarToggler onClick={this.toggleCollapse("navbarCollapse3")} />
+          <MDBCollapse
+            id="navbarCollapse3"
+            isOpen={this.state.collapseID}
+            navbar
+          >
             {this.props.childProps.isAuthenticated ? (
               <Fragment>
-                <LinkContainer to="/user/all">
-                  <Nav.Link>User Item</Nav.Link>
-                </LinkContainer>
-
-                <LinkContainer to="/edituser">
-                  <Nav.Link>Admin Item</Nav.Link>
-                </LinkContainer>
-
-                <NavDropdown title="User Dropdown" id="collasible-nav-dropdown">
-                  <LinkContainer to="/user/all">
-                    <NavDropdown.Item>All Users</NavDropdown.Item>
-                  </LinkContainer>
-
-                  <LinkContainer to="/edituser">
-                    <NavDropdown.Item>Edit User</NavDropdown.Item>
-                  </LinkContainer>
-
-                  <NavDropdown.Item href="#action/3.3">
-                    Something
-                  </NavDropdown.Item>
-
-                  <NavDropdown.Divider />
-
-                  <NavDropdown.Item href="#action/3.4">
-                    Separated link
-                  </NavDropdown.Item>
-                </NavDropdown>
-                <NavDropdown
-                  title="Admin Dropdown"
-                  id="collasible-nav-dropdown"
-                >
-                  <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.2">
-                    Another action
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.3">
-                    Something
-                  </NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item href="#action/3.4">
-                    Separated link
-                  </NavDropdown.Item>
-                </NavDropdown>
-                <NavDropdown
-                  alignRight
-                  title={
-                    <div style={{ display: "inline-block" }}>
-                      <FontAwesomeIcon icon={faUser} />
-                    </div>
-                  }
-                  id="collasible-nav-dropdown"
-                >
-                  <NavDropdown.Item href="#action/3.1">
-                    Edit Profile
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.2">
-                    Change Password
-                  </NavDropdown.Item>
-
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item onClick={this.handleLogout}>
-                    Logout
-                  </NavDropdown.Item>
-                </NavDropdown>
+                <MDBNavbarNav left>
+                  <MDBNavItem active>
+                    <MDBNavLink to="#!">Home</MDBNavLink>
+                  </MDBNavItem>
+                  <MDBNavItem>
+                    <MDBNavLink to="#!">Features</MDBNavLink>
+                  </MDBNavItem>
+                  <MDBNavItem>
+                    <MDBNavLink to="#!">Pricing</MDBNavLink>
+                  </MDBNavItem>
+                  <MDBNavItem>
+                    <MDBDropdown>
+                      <MDBDropdownToggle nav caret>
+                        <div className="d-none d-md-inline">Users</div>
+                      </MDBDropdownToggle>
+                      <MDBDropdownMenu className="dropdown-default" right>
+                        <MDBNavLink to="/user/all">
+                          <MDBDropdownItem>View All Users</MDBDropdownItem>
+                        </MDBNavLink>
+                        <MDBNavLink to="/signup">
+                          <MDBDropdownItem>Register New User</MDBDropdownItem>
+                        </MDBNavLink>
+                      </MDBDropdownMenu>
+                    </MDBDropdown>
+                  </MDBNavItem>
+                </MDBNavbarNav>
+                <MDBNavbarNav right>
+                  <MDBNavItem>
+                    <MDBDropdown>
+                      <MDBDropdownToggle nav caret>
+                        <MDBIcon icon="user" className="mr-1" />
+                        Profile
+                      </MDBDropdownToggle>
+                      <MDBDropdownMenu className="dropdown-default" right>
+                        <MDBDropdownItem>Edit Profile</MDBDropdownItem>
+                        <MDBDropdownItem>Change Password</MDBDropdownItem>
+                        <MDBDropdownItem divider />
+                        <MDBDropdownItem onClick={this.handleLogout}>
+                          Log out
+                        </MDBDropdownItem>
+                      </MDBDropdownMenu>
+                    </MDBDropdown>
+                  </MDBNavItem>
+                </MDBNavbarNav>
               </Fragment>
             ) : (
               <Fragment>
-                <LinkContainer to="/signup">
-                  <Nav.Link>Signup</Nav.Link>
-                </LinkContainer>
-                <LinkContainer to="/login">
-                  <Nav.Link>Login</Nav.Link>
-                </LinkContainer>
+                <MDBNavbarNav right>
+                  <MDBNavItem>
+                    <MDBNavLink
+                      className="waves-effect waves-light"
+                      to="/signup"
+                    >
+                      <MDBIcon icon="pen" className="mr-1" />
+                      Signup
+                    </MDBNavLink>
+                  </MDBNavItem>
+                  <MDBNavItem>
+                    <MDBNavLink
+                      className="waves-effect waves-light"
+                      to="/login"
+                    >
+                      <MDBIcon icon="sign-in-alt" className="mr-1" />
+                      Login
+                    </MDBNavLink>
+                  </MDBNavItem>
+                </MDBNavbarNav>
               </Fragment>
             )}
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
+          </MDBCollapse>
+        </MDBNavbar>
+      </MDBContainer>
     );
   }
 }
