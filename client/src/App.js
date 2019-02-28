@@ -4,6 +4,7 @@ import axios from "axios";
 import "./App.css";
 import Routes from "./Routes";
 import NavMenu from "./containers/NavMenu/NavMenu";
+import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
 
 class App extends Component {
   constructor(props) {
@@ -12,28 +13,33 @@ class App extends Component {
     this.state = {
       isAuthenticated: false,
       isAuthenticating: true,
-      username: ""
+      username: "",
+      companyId: null
     };
   }
 
   async componentDidMount() {
     // this is checking to see is a user is already logged in
     const accessString = localStorage.getItem("JWT");
+    const companyId = localStorage.getItem("companyId");
+
+    console.log("attempting to login to company ", companyId);
+
     if (accessString == null) {
       console.log("accessString is null");
       this.setState({
         isLoading: false,
         error: true,
-        isAuthenticating: false
+        isAuthenticating: false,
+        companyId: null
       });
     } else {
-      console.log(accessString);
-
       await axios
-        .get("/findUser", {
+        .get("/me?companyId=" + companyId, {
           headers: { Authorization: `JWT ${accessString}` }
         })
         .then(response => {
+          console.log(response.data);
           this.setState({
             first_name: response.data.first_name,
             last_name: response.data.last_name,
@@ -43,7 +49,8 @@ class App extends Component {
             isLoading: false,
             isAuthenticated: response.data.isAuthenticated,
             error: false,
-            isAuthenticating: false
+            isAuthenticating: false,
+            companyName: response.data.companyName
           });
         })
         .catch(error => {
@@ -53,20 +60,26 @@ class App extends Component {
             isAuthenticating: false
           });
           localStorage.removeItem("JWT"); //clear expired
+          localStorage.removeItem("companyId");
         });
     }
   }
 
-  userHasAuthenticated = (authenticated, username) => {
-    this.setState({ isAuthenticated: authenticated, username: username });
-    console.log(this.state);
+  userHasAuthenticated = (authenticated, username, companyId, companyName) => {
+    this.setState({
+      isAuthenticated: authenticated,
+      username: username,
+      companyId: companyId,
+      companyName: companyName
+    });
   };
 
   render() {
     const childProps = {
       isAuthenticated: this.state.isAuthenticated,
       userHasAuthenticated: this.userHasAuthenticated,
-      username: this.state.username
+      username: this.state.username,
+      companyName: this.state.companyName
     };
 
     return (

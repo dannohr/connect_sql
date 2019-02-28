@@ -8,17 +8,17 @@ router.use(bodyParser.json());
 const db = require("../models/index");
 const getUser = require("./common/getUser");
 
-// RETURNS ALL THE USERS IN THE DATABASE
-router.get("/", function(req, res) {
-  getUser(req, res);
-});
+// // RETURNS ALL THE USERS IN THE DATABASE
+// router.get("/", function(req, res) {
+//   getUser(req, res);
+// });
 
-// GET ONE USER
-router.get("/:userid", function(req, res) {
-  db.User.findById(req.params.userid).then(company => {
-    company ? res.json(company) : res.status(404).send("No user found.");
-  });
-});
+// // GET ONE USER
+// router.get("/:userid", function(req, res) {
+//   db.User.findById(req.params.userid).then(company => {
+//     company ? res.json(company) : res.status(404).send("No user found.");
+//   });
+// });
 
 //CREATE A USER
 router.post("/", (req, res) => {

@@ -27,14 +27,15 @@ const AllUserTables = {
   where: filterBy
 };
 
-function getUser(req, res, next) {
-  if (req.userId) {
+function getUserData(userId) {
+  if (userId) {
     filterBy = { id: req.userId };
   }
   db.User.findAll(AllUserTables).then(users => {
     console.log(users);
-    res.json(users);
+    return users;
+    // res.json(users);
   });
 }
 
-module.exports = getUser;
+module.exports = getUserData;

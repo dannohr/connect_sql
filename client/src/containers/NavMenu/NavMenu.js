@@ -4,6 +4,9 @@ import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import "./NavMenu.css";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+
 class NavMenu extends Component {
   handleLogout = event => {
     this.props.childProps.userHasAuthenticated(false);
@@ -18,7 +21,8 @@ class NavMenu extends Component {
         <Navbar.Collapse id="responsive-navbar-nav">
           {this.props.childProps.isAuthenticated ? (
             <Navbar.Text>
-              Signed in as: {this.props.childProps.username}{" "}
+              Signed in as: {this.props.childProps.username} {"   ("}
+              {this.props.childProps.companyName} {")"}
             </Navbar.Text>
           ) : null}
 
@@ -26,27 +30,36 @@ class NavMenu extends Component {
             {this.props.childProps.isAuthenticated ? (
               <Fragment>
                 <LinkContainer to="/user/all">
-                  <Nav.Link>Menu 1</Nav.Link>
+                  <Nav.Link>User Item</Nav.Link>
                 </LinkContainer>
+
                 <LinkContainer to="/edituser">
-                  <Nav.Link>Menu 2</Nav.Link>
+                  <Nav.Link>Admin Item</Nav.Link>
                 </LinkContainer>
-                <NavDropdown title="User" id="collasible-nav-dropdown">
+
+                <NavDropdown title="User Dropdown" id="collasible-nav-dropdown">
                   <LinkContainer to="/user/all">
                     <NavDropdown.Item>All Users</NavDropdown.Item>
                   </LinkContainer>
+
                   <LinkContainer to="/edituser">
                     <NavDropdown.Item>Edit User</NavDropdown.Item>
                   </LinkContainer>
+
                   <NavDropdown.Item href="#action/3.3">
                     Something
                   </NavDropdown.Item>
+
                   <NavDropdown.Divider />
+
                   <NavDropdown.Item href="#action/3.4">
                     Separated link
                   </NavDropdown.Item>
                 </NavDropdown>
-                <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
+                <NavDropdown
+                  title="Admin Dropdown"
+                  id="collasible-nav-dropdown"
+                >
                   <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                   <NavDropdown.Item href="#action/3.2">
                     Another action
@@ -59,7 +72,27 @@ class NavMenu extends Component {
                     Separated link
                   </NavDropdown.Item>
                 </NavDropdown>
-                <Nav.Link onClick={this.handleLogout}>Logout</Nav.Link>
+                <NavDropdown
+                  alignRight
+                  title={
+                    <div style={{ display: "inline-block" }}>
+                      <FontAwesomeIcon icon={faUser} />
+                    </div>
+                  }
+                  id="collasible-nav-dropdown"
+                >
+                  <NavDropdown.Item href="#action/3.1">
+                    Edit Profile
+                  </NavDropdown.Item>
+                  <NavDropdown.Item href="#action/3.2">
+                    Change Password
+                  </NavDropdown.Item>
+
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item onClick={this.handleLogout}>
+                    Logout
+                  </NavDropdown.Item>
+                </NavDropdown>
               </Fragment>
             ) : (
               <Fragment>

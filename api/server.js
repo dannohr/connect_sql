@@ -17,20 +17,21 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(passport.initialize());
 
-var UserController = require("./routes/UserController");
-app.use("/users", UserController);
-
+// var UserController = require("./routes/UserController");
 var CompanyController = require("./routes/CompanyController");
-app.use("/company", CompanyController);
-
 var UserCompanyController = require("./routes/UserCompanyController");
+// var AuthController = require("./routes/jwtLogin/AuthController");
+
+// app.use("/users", UserController);
+app.use("/company", CompanyController);
 app.use("/usercompany", UserCompanyController);
+// app.use("/auth", AuthController);
 
-var AuthController = require("./routes/jwtLogin/AuthController");
-app.use("/auth", AuthController);
+require("./routes/auth/loginUser")(app);
+require("./routes/auth/findUsers")(app);
 
-require("./routes/loginUser")(app);
-require("./routes/findUsers")(app);
+require("./routes/user/getUsers")(app);
+require("./routes/user/getUser")(app);
 
 app.listen(port, function() {
   console.log("Express server listening on port " + port);

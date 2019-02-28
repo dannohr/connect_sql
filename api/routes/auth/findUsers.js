@@ -1,43 +1,13 @@
-/* eslint-disable no-console */
 import passport from "passport";
-const db = require("../models/index");
-
-/**
- * @swagger
- * /findUser:
- *   get:
- *     tags:
- *       - Users
- *     name: Find user
- *     summary: Finds a user
- *     security:
- *       - bearerAuth: []
- *     consumes:
- *       - application/json
- *     produces:
- *       - application/json
- *     parameters:
- *       - in: query
- *         name: username
- *         schema:
- *           type: string
- *         required:
- *           - username
- *     responses:
- *       '200':
- *         description: A single user object
- *         schema:
- *           $ref: '#/definitions/User'
- *       '401':
- *         description: No auth token / no user found in db with that name
- *       '403':
- *         description: JWT token and username from client don't match
- */
+const db = require("../../models/index");
 
 module.exports = app => {
-  app.get("/findUser", (req, res, next) => {
+  app.get("/me", (req, res, next) => {
+    console.log("--------------------------------");
+    console.log(req.params);
+    console.log(req.query);
+    console.log("--------------------------------");
     passport.authenticate("jwt", { session: false }, (err, user, info) => {
-      console.log(user);
       if (err) {
         console.log(err);
       }
@@ -46,20 +16,34 @@ module.exports = app => {
         res.status(401).send(info.message);
       } else if (user.username) {
         db.User.findOne({
+          include: [
+            {
+              model: db.UserCompany,
+              include: [
+                {
+                  model: db.Company,
+                  where: {
+                    id: req.query.companyId
+                  }
+                }
+              ]
+            }
+          ],
           where: {
             username: user.username
           }
         }).then(userInfo => {
           if (userInfo != null) {
             console.log("user found in db from findUsers");
+            // console.log(userInfo);
             res.status(200).send({
               isAuthenticated: true,
               first_name: userInfo.first_name,
               last_name: userInfo.last_name,
               email: userInfo.email,
               username: userInfo.username,
-              password: userInfo.password,
-              message: "user found in db"
+              message: "user found in db",
+              companyName: userInfo.UserCompanies[0].Company.name
             });
           } else {
             console.error("no user exists in db with that username");
@@ -67,9 +51,6 @@ module.exports = app => {
           }
         });
       } else {
-        console.log(user.username);
-        console.log(req.body.username);
-        console.log(req.body);
         console.error("jwt id and username do not match");
         res.status(403).send("username and jwt token do not match");
       }

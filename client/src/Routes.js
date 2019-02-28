@@ -9,10 +9,12 @@ import AllUsers from "./containers/Users/AllUsers/AllUsers";
 import EditUser from "./containers/Users/EditUser/EditUser";
 import AuthenticatedRoute from "./components/AuthenticatedRoute";
 import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
+// import { hasRole, isAllowed } from './util/auth';
 
 export default ({ childProps }) => (
   <Switch>
     <AppliedRoute path="/" exact component={Home} props={childProps} />
+
     <UnauthenticatedRoute
       path="/login"
       exact
