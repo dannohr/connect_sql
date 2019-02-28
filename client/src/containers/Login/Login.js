@@ -1,9 +1,19 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { FormGroup, FormControl, Form } from "react-bootstrap";
 import "./Login.css";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
-import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from "mdbreact";
+import {
+  MDBContainer,
+  MDBRow,
+  MDBCol,
+  MDBInput,
+  MDBCard,
+  MDBCardBody,
+  MDBModalFooter,
+  MDBCardHeader,
+  MDBIcon,
+  MDBAlert
+} from "mdbreact";
 
 export default class Login extends Component {
   constructor(props) {
@@ -27,7 +37,8 @@ export default class Login extends Component {
 
   handleChange = event => {
     this.setState({
-      [event.target.id]: event.target.value
+      [event.target.id]: event.target.value,
+      showError: false
     });
     // console.log("id is: ", event.target.id, " value is: ", event.target.value);
   };
@@ -126,93 +137,85 @@ export default class Login extends Component {
 
     return (
       <div className="Login">
-        <form onSubmit={this.handleSubmit}>
-          <FormGroup controlId="username">
-            <Form.Label>Username</Form.Label>
-            <FormControl
-              autoFocus
-              value={this.state.username}
-              onChange={this.handleChange}
-              type="text"
-            />
-          </FormGroup>
-          <FormGroup controlId="password">
-            <Form.Label>Password</Form.Label>
-            <FormControl
-              value={this.state.password}
-              onChange={this.handleChange}
-              type="password"
-            />
-          </FormGroup>
-
-          {/* Hide if there's more than one company after logging in */}
-          {!this.state.multipleCompany ? (
-            <LoaderButton
-              block
-              disabled={!this.validateForm()}
-              type="submit"
-              isLoading={this.state.isLoading}
-              text="Login"
-              loadingText="Logging in…"
-            />
-          ) : null}
-
-          {/* Show if there's more than one company after logging in */}
-          {this.state.multipleCompany ? (
-            <Form.Group controlId="companyId">
-              <Form.Label>Select a Company</Form.Label>
-              <Form.Control
-                as="select"
-                // onChange={this.handleChange}
-                onChange={this.handleCompanySelect}
-                value={this.state.companyId}
-              >
-                <option value="0" key="0">
-                  Select One
-                </option>
-                {companyList}
-              </Form.Control>
-            </Form.Group>
-          ) : null}
-        </form>
-
-        {showError && (
-          <div>
-            <p>
-              That username or password isn&apos;t recognized. Please try again
-              or register now.
-            </p>
-            <p> Maybe add something here to go to Registration screen?</p>
-          </div>
-        )}
-
         <MDBContainer>
-          <MDBRow>
+          <MDBRow center>
             <MDBCol md="6">
-              <form>
-                <p className="h5 text-center mb-4">Sign in</p>
-                <div className="grey-text">
-                  <MDBInput
-                    label="Type your email"
-                    icon="envelope"
-                    group
-                    type="email"
-                    validate
-                    error="wrong"
-                    success="right"
-                  />
-                  <MDBInput
-                    label="Type your password"
-                    icon="lock"
-                    group
-                    type="password"
-                    validate
-                  />
-                </div>
+              <MDBCard>
+                <MDBCardBody>
+                  <MDBCardHeader className="form-header winter-neva-gradient rounded">
+                    <h3 className="my-3">
+                      <MDBIcon icon="lock" /> Login:
+                    </h3>
+                  </MDBCardHeader>
+                  <form onSubmit={this.handleSubmit}>
+                    <div className="grey-text">
+                      <MDBInput
+                        id="username"
+                        label="User Name"
+                        icon="user"
+                        group
+                        type="text"
+                        value={this.state.username}
+                        onChange={this.handleChange}
+                      />
+
+                      <MDBInput
+                        id="password"
+                        label="Password"
+                        icon="lock"
+                        group
+                        type="password"
+                        value={this.state.password}
+                        onChange={this.handleChange}
+                      />
+                      {/* </div> */}
+
+                      {/* Hide if there's more than one company after logging in */}
+                      {!this.state.multipleCompany ? (
+                        <LoaderButton
+                          block
+                          disabled={!this.validateForm()}
+                          type="submit"
+                          isLoading={this.state.isLoading}
+                          text="Login"
+                          loadingText="Logging in…"
+                        />
+                      ) : null}
+
+                      {/* Show if there's more than one company after logging in */}
+                      {this.state.multipleCompany ? (
+                        <div>
+                          <select
+                            className="browser-default custom-select"
+                            id="companyId"
+                            onChange={this.handleCompanySelect}
+                            defaultValue=""
+                          >
+                            <option value="" disabled hidden>
+                              Select Company
+                            </option>
+                            {companyList}
+                          </select>
+                        </div>
+                      ) : null}
+                    </div>
+                  </form>
+
+                  <MDBModalFooter>
+                    <div className="font-weight-light">
+                      <p>Forgot Password?</p>
+                    </div>
+                  </MDBModalFooter>
+                </MDBCardBody>
+              </MDBCard>
+              {showError && (
                 <div className="text-center">
-                  <MDBBtn>Login</MDBBtn>
+                  <MDBAlert color="danger">
+                    That username or password isn&apos;t recognized. Please try
+                    again or register now.
+                  </MDBAlert>
                 </div>
-              </form>
+              )}
             </MDBCol>
           </MDBRow>
         </MDBContainer>
