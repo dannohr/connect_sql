@@ -2,18 +2,31 @@ import passport from "passport";
 const db = require("../../models/index");
 
 module.exports = app => {
-  app.get("/user/:id", (req, res, next) => {
+  app.get("/user", (req, res, next) => {
+    // console.log(req.query);
+
     passport.authenticate("jwt", { session: false }, (err, user, info) => {
+      console.log("-----");
+      console.log(req.query.userId);
+      console.log(parseInt(req.query.userId));
+      console.log("-----");
       if (err) {
         console.log(err);
       }
       if (info !== undefined) {
         console.log(info.message);
         res.status(401).send(info.message);
+        // }
+        // else if (req.query.id != parseInt(req.params.id)) {
+        //   res.status(200).send({
+        //     isAuthenticated: true,
+        //     message: "not a valid userId",
+        //     newUser: true
+        //   });
       } else if (user.username) {
-        console.log(req.params.id);
+        console.log(req.query.id);
         db.User.findOne({
-          attributes: [["id", "userId"], "username", "name", "email"],
+          // attributes: [["id", "userId"], "username", "name", "email"],
           include: [
             {
               model: db.UserCompany,
@@ -37,16 +50,16 @@ module.exports = app => {
             }
           ],
           where: {
-            id: req.params.id
+            id: req.query.userId
           }
         }).then(userInfo => {
           if (userInfo != null) {
-            console.log("user found in db from findUsers");
+            console.log("user found in db from getUser");
             console.log(userInfo.dataValues);
             res.status(200).send({
               isAuthenticated: true,
               message: "one user in db",
-              allUsers: userInfo
+              userInfo: userInfo
             });
           } else {
             console.error("no users exist");

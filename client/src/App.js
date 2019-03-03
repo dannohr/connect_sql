@@ -31,7 +31,8 @@ class App extends Component {
         isLoading: false,
         error: true,
         isAuthenticating: false,
-        companyId: null
+        companyId: null,
+        isAuthenticated: false
       });
     } else {
       await axios
@@ -41,11 +42,11 @@ class App extends Component {
         .then(response => {
           console.log(response.data);
           this.setState({
-            first_name: response.data.first_name,
-            last_name: response.data.last_name,
-            email: response.data.email,
+            // first_name: response.data.first_name,
+            // last_name: response.data.last_name,
+            // email: response.data.email,
             username: response.data.username,
-            password: response.data.password,
+            // password: response.data.password,
             isLoading: false,
             isAuthenticated: response.data.isAuthenticated,
             error: false,
@@ -88,7 +89,9 @@ class App extends Component {
           {/* above div creates a fixed width container */}
           <NavMenu childProps={childProps} />
           <Routes childProps={childProps} />
-          <Footer childProps={childProps} />
+          {this.state.isAuthenticated ? (
+            <Footer childProps={childProps} />
+          ) : null}
         </div>
       )
     );

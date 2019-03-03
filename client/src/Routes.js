@@ -34,7 +34,7 @@ export default ({ childProps }) => (
       props={childProps}
     />
     <AuthenticatedRoute
-      path="/edituser"
+      path="/user/:userId"
       exact
       component={EditUser}
       props={childProps}

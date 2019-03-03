@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { MDBDataTable, MDBContainer } from "mdbreact";
+import { MDBDataTable, MDBContainer, MDBNavLink, MDBIcon } from "mdbreact";
 import "./AllUsers.css";
 
 export default class AllUsers extends Component {
@@ -53,10 +53,25 @@ export default class AllUsers extends Component {
     }
   }
 
+  handleEdit = () => {
+    console.log("Edit User");
+  };
+
   render() {
-    // const users = this.state.allUsers;
-    const users = this.state.allUsers.map(user => {
+    const users = this.state.allUsers.map((user, index) => {
       return {
+        // id: index,
+        editUser: (
+          <MDBNavLink to={"/user/" + user.userId}>
+            <MDBIcon
+              far
+              icon="edit"
+              size="sm"
+              id={index}
+              onClick={this.handleEdit}
+            />
+          </MDBNavLink>
+        ),
         userId: user.userId,
         name: user.name,
         username: user.username,
@@ -67,10 +82,16 @@ export default class AllUsers extends Component {
     const data = {
       columns: [
         {
+          label: "Edit",
+          field: "id",
+          width: 15
+        },
+
+        {
           label: "User ID",
           field: "userId",
           sort: "asc",
-          width: 150
+          width: 10
         },
         {
           label: "Name",
@@ -93,11 +114,11 @@ export default class AllUsers extends Component {
       ],
       rows: users
     };
-    console.log(data);
+
     return (
       <MDBContainer>
         <h1>List of all users in database</h1>
-        <MDBDataTable striped bordered hover data={data} />
+        <MDBDataTable striped bordered hover small data={data} />
       </MDBContainer>
     );
   }
