@@ -8,9 +8,9 @@ router.use(bodyParser.json());
 const db = require("../models/index");
 
 // RETURNS ALL THE COMPANIES IN THE DATABASE
-router.get("/", function(req, res) {
-  db.Company.findAll().then(companies => res.json(companies));
-});
+// router.get("/", function(req, res) {
+//   db.Company.findAll().then(companies => res.json(companies));
+// });
 
 // RETURN COMPANY BY ID
 router.get("/:id", (req, res) => {

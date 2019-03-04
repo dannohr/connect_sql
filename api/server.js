@@ -34,6 +34,9 @@ require("./routes/auth/updatePassword")(app);
 require("./routes/user/getUsers")(app);
 require("./routes/user/getUser")(app);
 
+require("./routes/company/getCompanies")(app);
+require("./routes/company/getCompany")(app);
+
 app.listen(port, function() {
   console.log("Express server listening on port " + port);
 });

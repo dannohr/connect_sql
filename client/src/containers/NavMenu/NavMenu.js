@@ -70,7 +70,7 @@ class NavMenu extends Component {
                         <MDBNavLink to="/user/all">
                           <MDBDropdownItem>View All Users</MDBDropdownItem>
                         </MDBNavLink>
-                        <MDBNavLink to="/signup">
+                        <MDBNavLink to="/user/new">
                           <MDBDropdownItem>Create New User</MDBDropdownItem>
                         </MDBNavLink>
                       </MDBDropdownMenu>

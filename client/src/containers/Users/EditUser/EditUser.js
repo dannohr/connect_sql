@@ -19,7 +19,9 @@ export default class EditUser extends Component {
     this.state = {
       isLoading: false,
       userInfo: {},
-      newUser: false
+      newUser: false,
+      allCompanies: [],
+      newUserCompanyId: null
     };
   }
 
@@ -37,9 +39,27 @@ export default class EditUser extends Component {
         error: true,
         isAuthenticating: false
       });
+    } else {
+      //get list of companies
+      await axios
+        .get("/companies", {
+          headers: { Authorization: `JWT ${accessString}` }
+        })
+        .then(response => {
+          console.log(response);
+          this.setState({
+            allCompanies: response.data.allCompanies
+          });
+          // console.log(response.data);
+          console.log(this.state);
+        })
+        .catch(error => {
+          console.error(error.response.data);
+        });
     }
+
     //check if userId is a number, only make axios call if it is
-    else if (userId == parseInt(userId)) {
+    if (userId == parseInt(userId)) {
       await axios
         .get("/user?userId=" + userId, {
           headers: { Authorization: `JWT ${accessString}` }
@@ -90,17 +110,41 @@ export default class EditUser extends Component {
     console.log("API Call to save data");
   };
   handleNewUser = () => {
-    console.log("API Call to create new user");
+    let body = {
+      username: this.state.userInfo.username,
+      password: this.state.userInfo.password,
+      first_name: this.state.userInfo.first_name,
+      last_name: this.state.userInfo.last_name,
+      email: this.state.userInfo.email,
+      companyId: this.state.newUserCompanyId
+    };
+    console.log("API Call to create new user", body);
+  };
+
+  handleCompanySelect = e => {
+    let compId = Number(e.target.value);
+
+    this.setState({
+      newUserCompanyId: compId
+    });
   };
 
   render() {
+    let companyList = this.state.allCompanies.map(company => {
+      return (
+        <option value={company.id} key={company.id}>
+          {company.name}
+        </option>
+      );
+    });
+
     return (
       <MDBContainer>
         {this.state.newUser ? <h1>Create User</h1> : <h1>Edit User</h1>}
 
         <MDBNavLink to={"/user/all"}>
           <MDBBtn color="primary" size="sm" className="mb-4">
-            <MDBIcon icon="arrow-left" className="mr-1" /> Back
+            <MDBIcon icon="arrow-left" className="mr-1" /> All Users
           </MDBBtn>
         </MDBNavLink>
 
@@ -176,11 +220,13 @@ export default class EditUser extends Component {
                     </MDBCol>
                     <MDBCol md="4" className="my-auto center">
                       <div>
-                        <select className="browser-default custom-select">
+                        <select
+                          className="browser-default custom-select"
+                          id="companyId"
+                          onChange={this.handleCompanySelect}
+                        >
                           <option>Select Initial Company</option>
-                          <option value="1">Option 1</option>
-                          <option value="2">Option 2</option>
-                          <option value="3">Option 3</option>
+                          {companyList}
                         </select>
                       </div>
                     </MDBCol>
