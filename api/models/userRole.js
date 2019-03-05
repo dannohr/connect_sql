@@ -4,10 +4,9 @@ module.exports = (sequelize, DataTypes) => {
     "UserRole",
     {
       id: {
-        allowNull: false,
         primaryKey: true,
         type: DataTypes.INTEGER,
-        defaultValue: DataTypes.INTEGER
+        autoIncrement: true
       },
       roleName: DataTypes.STRING
     },

@@ -12,7 +12,13 @@ module.exports = app => {
         res.status(401).send(info.message);
       } else if (user.username) {
         db.User.findAll({
-          attributes: [["id", "userId"], "username", "name", "email"],
+          attributes: [
+            ["id", "userId"],
+            "username",
+            "firstName",
+            "lastName",
+            "email"
+          ],
           include: [
             {
               model: db.UserCompany,

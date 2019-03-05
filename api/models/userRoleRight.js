@@ -4,10 +4,9 @@ module.exports = (sequelize, DataTypes) => {
     "UserRoleRight",
     {
       id: {
-        allowNull: false,
         primaryKey: true,
         type: DataTypes.INTEGER,
-        defaultValue: DataTypes.INTEGER
+        autoIncrement: true
       },
       userRoleId: DataTypes.INTEGER,
       userRightId: DataTypes.INTEGER

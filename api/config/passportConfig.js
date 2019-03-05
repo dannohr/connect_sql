@@ -51,9 +51,10 @@ passport.use(
               username,
               password: hashedPassword,
               email: req.body.email,
-              name: "some dumb name"
+              firstName: req.body.firstName,
+              lastName: req.body.lastName
             }).then(user => {
-              console.log("user created");
+              console.log("user created via Passport register");
               return done(null, user);
             });
           });

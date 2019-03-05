@@ -30,7 +30,7 @@ module.exports = {
       userRoleId: {
         type: Sequelize.INTEGER,
         onDelete: "CASCADE",
-        allowNull: false,
+        allowNull: true,
         references: {
           model: "UserRole",
           key: "id"

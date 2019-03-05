@@ -38,8 +38,8 @@ module.exports = app => {
             // console.log(userInfo);
             res.status(200).send({
               isAuthenticated: true,
-              first_name: userInfo.first_name,
-              last_name: userInfo.last_name,
+              firstName: userInfo.firstName,
+              lastName: userInfo.lastName,
               email: userInfo.email,
               username: userInfo.username,
               message: "user found in db",

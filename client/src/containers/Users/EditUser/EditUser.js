@@ -17,7 +17,11 @@ export default class EditUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: false,
+      isLoading: true,
+      isAuthenticating: false,
+      isAuthenticated: false,
+      error: false,
+      message: "",
       userInfo: {},
       newUser: false,
       allCompanies: [],
@@ -103,22 +107,71 @@ export default class EditUser extends Component {
         [event.target.id]: event.target.value
       }
     });
-    console.log(this.state.userInfo);
   };
 
   handleEditUser = () => {
     console.log("API Call to save data");
   };
-  handleNewUser = () => {
+  handleNewUser = e => {
+    e.preventDefault();
     let body = {
       username: this.state.userInfo.username,
       password: this.state.userInfo.password,
-      first_name: this.state.userInfo.first_name,
-      last_name: this.state.userInfo.last_name,
+      firstName: this.state.userInfo.firstName,
+      lastName: this.state.userInfo.lastName,
       email: this.state.userInfo.email,
       companyId: this.state.newUserCompanyId
     };
     console.log("API Call to create new user", body);
+
+    // const {
+    //   firstName,
+    //   lastName,
+    //   username,
+    //   password,
+    //   email
+    // } = this.state.userInfo;
+    if (body.username === "" || body.password === "" || body.email === "") {
+      this.setState({
+        showError: true,
+        loginError: false,
+        registerError: true
+      });
+    } else {
+      axios
+        .post(
+          "/addUser",
+          body //{
+          //   firstName,
+          //   lastName,
+          //   email,
+          //   username,
+          //   password
+          // }
+        )
+        .then(response => {
+          console.log(response.data);
+          this.setState({
+            messageFromServer: response.data.message,
+            showError: false,
+            loginError: false,
+            registerError: false,
+            userInfo: response.data.userInfo,
+            newUser: false
+          });
+          console.log(this.state);
+        })
+        .catch(error => {
+          console.error(error.response.data);
+          if (error.response.data === "username or email already taken") {
+            this.setState({
+              showError: true,
+              loginError: true,
+              registerError: false
+            });
+          }
+        });
+    }
   };
 
   handleCompanySelect = e => {
@@ -181,25 +234,25 @@ export default class EditUser extends Component {
               <MDBRow center>
                 <MDBCol md="4">
                   <MDBInput
-                    id="first_name"
+                    id="firstName"
                     label="First Name"
                     icon="user"
                     group
                     type="text"
                     size="sm"
-                    value={this.state.userInfo.first_name}
+                    value={this.state.userInfo.firstName}
                     onChange={this.handleChange}
                   />
                 </MDBCol>
                 <MDBCol md="4">
                   <MDBInput
-                    id="last_name"
+                    id="lastName"
                     label="Last Name"
                     icon="user"
                     group
                     type="text"
                     size="sm"
-                    value={this.state.userInfo.last_name}
+                    value={this.state.userInfo.lastName}
                     onChange={this.handleChange}
                   />
                 </MDBCol>

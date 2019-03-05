@@ -30,9 +30,11 @@ app.use("/usercompany", UserCompanyController);
 require("./routes/auth/loginUser")(app);
 require("./routes/auth/findUsers")(app);
 require("./routes/auth/updatePassword")(app);
+require("./routes/auth/addUser")(app);
 
 require("./routes/user/getUsers")(app);
 require("./routes/user/getUser")(app);
+require("./routes/user/deleteUser")(app);
 
 require("./routes/company/getCompanies")(app);
 require("./routes/company/getCompany")(app);

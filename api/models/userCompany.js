@@ -4,12 +4,11 @@ module.exports = (sequelize, DataTypes) => {
     "UserCompany",
     {
       id: {
-        allowNull: false,
         primaryKey: true,
         type: DataTypes.INTEGER,
-        defaultValue: DataTypes.INTEGER
+        autoIncrement: true
       },
-      userRoleId: DataTypes.INTEGER
+      userRoleId: { type: DataTypes.INTEGER, allowNull: true }
     },
     {}
   );

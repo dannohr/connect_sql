@@ -5,19 +5,19 @@ https://medium.freecodecamp.org/securing-node-js-restful-apis-with-json-web-toke
 
 # Data Migrations
 
-sequelize db:migrate
+sequelize db:migrate --config config/sequelizeConfig.js
 
 sequelize db:migrate:undo
-sequelize db:migrate:undo:all
+sequelize db:migrate:undo:all --config config/sequelizeConfig.js
 
 # Data Migrations
 
 seed:generate --name pick-any-name
 
-sequelize db:seed:all
+sequelize db:seed:all --config config/sequelizeConfig.js
 
 sequelize db:seed:undo
-sequelize db:seed:undo:all
+sequelize db:seed:undo:all --config config/sequelizeConfig.js
 
 ## Starting App
 

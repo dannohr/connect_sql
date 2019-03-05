@@ -1,7 +1,7 @@
 const db = require("../../models/index");
 let filterBy = {};
 const AllUserTables = {
-  attributes: [["id", "userId"], "username", "name", "email"],
+  attributes: [["id", "userId"], "username", "firstName", "lastName", "email"],
   include: [
     {
       model: db.UserCompany,

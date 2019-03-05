@@ -4,10 +4,9 @@ module.exports = (sequelize, DataTypes) => {
     "UserRight",
     {
       id: {
-        allowNull: false,
         primaryKey: true,
         type: DataTypes.INTEGER,
-        defaultValue: DataTypes.INTEGER
+        autoIncrement: true
       },
       rightName: DataTypes.STRING
     },

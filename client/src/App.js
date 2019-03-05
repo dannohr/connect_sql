@@ -42,8 +42,8 @@ class App extends Component {
         .then(response => {
           console.log(response.data);
           this.setState({
-            // first_name: response.data.first_name,
-            // last_name: response.data.last_name,
+            // firstName: response.data.firstName,
+            // lastName: response.data.lastName,
             // email: response.data.email,
             username: response.data.username,
             // password: response.data.password,

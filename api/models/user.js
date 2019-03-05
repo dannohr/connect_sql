@@ -4,17 +4,17 @@ module.exports = (sequelize, DataTypes) => {
     "User",
     {
       id: {
-        allowNull: false,
+        // allowNull: false,
         primaryKey: true,
         type: DataTypes.INTEGER,
-        defaultValue: DataTypes.INTEGER
+        autoIncrement: true
       },
       email: DataTypes.STRING,
       password: { type: DataTypes.STRING, allowNull: false },
       username: { type: DataTypes.STRING, unique: true },
-      name: DataTypes.STRING,
-      first_name: DataTypes.STRING,
-      last_name: DataTypes.STRING,
+      // name: DataTypes.STRING,
+      firstName: DataTypes.STRING,
+      lastName: DataTypes.STRING,
       resetPasswordToken: DataTypes.STRING,
       resetPasswordExpires: DataTypes.DATE
     },

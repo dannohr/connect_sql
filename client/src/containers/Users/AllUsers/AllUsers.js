@@ -1,11 +1,21 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { MDBDataTable, MDBContainer, MDBNavLink, MDBIcon } from "mdbreact";
+import {
+  MDBDataTable,
+  MDBCol,
+  MDBRow,
+  MDBContainer,
+  MDBNavLink,
+  MDBIcon
+} from "mdbreact";
 import "./AllUsers.css";
+import DeleteUserButton from "../../../components/DeleteUserButton/DeleteUserButton";
 
 export default class AllUsers extends Component {
   constructor(props) {
     super(props);
+
+    this.handleDelete = this.handleDelete.bind(this);
 
     this.state = {
       isLoading: true,
@@ -16,6 +26,18 @@ export default class AllUsers extends Component {
       allUsers: []
     };
   }
+
+  removeByAttr = function(arr, attr, value) {
+    console.log(attr);
+    console.log(value);
+    var i = arr.length;
+    while (i--) {
+      if (arr[i] && arr[i].hasOwnProperty(attr) && arr[i][attr] === value) {
+        arr.splice(i, 1);
+      }
+    }
+    return arr;
+  };
 
   async componentDidMount() {
     // this is checking to see is a user is already logged in
@@ -57,23 +79,45 @@ export default class AllUsers extends Component {
     console.log("Edit User");
   };
 
+  handleDelete = (userId, deleted) => {
+    let allUsers = [...this.state.allUsers];
+
+    if (deleted) {
+      this.removeByAttr(allUsers, "userId", userId);
+      this.setState({ allUsers: allUsers });
+    } else {
+      console.log("not deleted");
+    }
+  };
+
   render() {
     const users = this.state.allUsers.map((user, index) => {
       return {
-        // id: index,
         editUser: (
-          <MDBNavLink to={"/user/" + user.userId}>
-            <MDBIcon
-              far
-              icon="edit"
-              size="sm"
-              id={index}
-              onClick={this.handleEdit}
-            />
-          </MDBNavLink>
+          <MDBRow className="mx-0 py-0">
+            <MDBCol className="my-auto float-left px-0 ">
+              <MDBNavLink to={"/user/" + user.userId} className="m-0 p-0">
+                <MDBIcon
+                  far
+                  icon="edit"
+                  size="large"
+                  id={index}
+                  onClick={this.handleEdit}
+                />
+              </MDBNavLink>
+            </MDBCol>
+            <MDBCol className="my-auto text-right px-0">
+              <DeleteUserButton
+                className="hover"
+                userId={user.userId}
+                handleDelete={this.handleDelete}
+              />
+            </MDBCol>
+          </MDBRow>
         ),
         userId: user.userId,
-        name: user.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
         username: user.username,
         email: user.email
       };
@@ -94,8 +138,14 @@ export default class AllUsers extends Component {
           width: 10
         },
         {
-          label: "Name",
-          field: "name",
+          label: "First Name",
+          field: "firstName",
+          sort: "asc",
+          width: 270
+        },
+        {
+          label: "Last Name",
+          field: "lastName",
           sort: "asc",
           width: 270
         },
