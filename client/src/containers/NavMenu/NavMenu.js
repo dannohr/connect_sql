@@ -1,5 +1,8 @@
 import React, { Component, Fragment } from "react";
 import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { authActions } from "../../_actions";
+
 import "./NavMenu.css";
 import {
   MDBNavbar,
@@ -18,9 +21,13 @@ import {
 } from "mdbreact";
 
 class NavMenu extends Component {
-  state = {
-    collapseID: ""
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      collapseID: ""
+    };
+  }
 
   toggleCollapse = collapseID => () =>
     this.setState(prevState => ({
@@ -28,8 +35,7 @@ class NavMenu extends Component {
     }));
 
   handleLogout = event => {
-    this.props.childProps.userHasAuthenticated(false);
-    localStorage.removeItem("JWT");
+    this.props.dispatch(authActions.logout());
     this.props.history.push("/login");
   };
 
@@ -49,7 +55,7 @@ class NavMenu extends Component {
             isOpen={this.state.collapseID}
             navbar
           >
-            {this.props.childProps.isAuthenticated ? (
+            {this.props.isAuthenticated ? (
               <Fragment>
                 <MDBNavbarNav left>
                   <MDBNavItem active>
@@ -127,4 +133,4 @@ class NavMenu extends Component {
   }
 }
 
-export default withRouter(NavMenu);
+export default withRouter(connect()(NavMenu));

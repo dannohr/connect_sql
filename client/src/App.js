@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-import axios from "axios";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { authActions } from "./_actions/auth.actions";
 
 import "./App.css";
 import Routes from "./Routes";
@@ -35,62 +37,26 @@ class App extends Component {
         isAuthenticated: false
       });
     } else {
-      await axios
-        .get("/me?companyId=" + companyId, {
-          headers: { Authorization: `JWT ${accessString}` }
-        })
-        .then(response => {
-          console.log(response.data);
-          this.setState({
-            // firstName: response.data.firstName,
-            // lastName: response.data.lastName,
-            // email: response.data.email,
-            username: response.data.username,
-            // password: response.data.password,
-            isLoading: false,
-            isAuthenticated: response.data.isAuthenticated,
-            error: false,
-            isAuthenticating: false,
-            companyName: response.data.companyName
-          });
-        })
-        .catch(error => {
-          console.error(error.response.data);
-          this.setState({
-            error: true,
-            isAuthenticating: false
-          });
-          localStorage.removeItem("JWT"); //clear expired
-          localStorage.removeItem("companyId");
-        });
+      this.props.dispatch(authActions.getMe());
     }
   }
 
-  userHasAuthenticated = (authenticated, username, companyId, companyName) => {
-    this.setState({
-      isAuthenticated: authenticated,
-      username: username,
-      companyId: companyId,
-      companyName: companyName
-    });
-  };
-
   render() {
     const childProps = {
-      isAuthenticated: this.state.isAuthenticated,
-      userHasAuthenticated: this.userHasAuthenticated,
-      username: this.state.username,
-      companyName: this.state.companyName
+      isAuthenticated: this.props.isAuthenticated
     };
 
     return (
-      !this.state.isAuthenticating && (
+      !this.props.isAuthenticating && (
         <div className="App">
           {/* above div creates a fixed width container */}
-          <NavMenu childProps={childProps} />
+          <NavMenu isAuthenticated={this.props.isAuthenticated} />
           <Routes childProps={childProps} />
-          {this.state.isAuthenticated ? (
-            <Footer childProps={childProps} />
+          {this.props.isAuthenticated ? (
+            <Footer
+              username={this.props.username}
+              companyName={this.props.companyLoggedIn.name}
+            />
           ) : null}
         </div>
       )
@@ -98,4 +64,13 @@ class App extends Component {
   }
 }
 
-export default App;
+function mapStateToProps(state) {
+  const { isAuthenticated, companyLoggedIn, username } = state.authentication;
+  return {
+    isAuthenticated,
+    companyLoggedIn,
+    username
+  };
+}
+
+export default withRouter(connect(mapStateToProps)(App));

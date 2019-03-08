@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import axios from "axios";
+import { connect } from "react-redux";
+import { authActions } from "../../_actions";
 import "./Login.css";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import {
@@ -15,19 +16,13 @@ import {
   MDBAlert
 } from "mdbreact";
 
-export default class Login extends Component {
+class Login extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      email: "",
-      password: "",
       username: "",
-      loggedIn: false,
-      showError: false,
-      isLoading: false,
-      companyList: [],
-      multipleCompany: false
+      password: ""
     };
   }
 
@@ -37,104 +32,29 @@ export default class Login extends Component {
 
   handleChange = event => {
     this.setState({
-      [event.target.id]: event.target.value,
-      showError: false
+      [event.target.id]: event.target.value
     });
-    // console.log("id is: ", event.target.id, " value is: ", event.target.value);
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    this.setState({ isLoading: true });
 
     const { username, password } = this.state;
+    const { dispatch } = this.props;
 
-    axios
-      .post("/loginUser", {
-        username,
-        password
-      })
-      .then(response => {
-        console.log(response.data);
-
-        let companyList = response.data.company.map(company => {
-          return {
-            companyName: company.Company.name,
-            companyId: company.Company.id
-          };
-        });
-        console.log("there are ", companyList.length, " companies");
-
-        console.log(companyList);
-
-        if (companyList.length === 1) {
-          // send back logged in, user name, and company
-          this.setState({
-            loggedIn: true,
-            showError: false
-          });
-          localStorage.setItem("JWT", response.data.token);
-          localStorage.setItem("companyId", companyList[0].companyId);
-          this.props.userHasAuthenticated(
-            true,
-            username,
-            companyList[0].companyId,
-            companyList[0].companyName
-          );
-          // this.props  coming from app.js
-        } else {
-          console.log("more than one company");
-          // Hide login button and show company list to select from
-          this.setState({
-            isLoading: false,
-            multipleCompany: true,
-            companyList: companyList,
-            token: response.data.token
-          });
-        }
-      })
-      .catch(error => {
-        console.error(error.response.data);
-        if (
-          error.response.data === "bad username" ||
-          error.response.data === "passwords do not match"
-        ) {
-          this.setState({
-            showError: true,
-            isLoading: false
-          });
-        }
-      });
+    if (username && password) {
+      dispatch(authActions.login(username, password));
+    }
   };
 
   handleCompanySelect = e => {
     let compId = Number(e.target.value);
 
-    let companyName = this.state.companyList.find(
-      item => item.companyId === compId
-    );
-
-    localStorage.setItem("JWT", this.state.token);
     localStorage.setItem("companyId", compId);
-    this.props.userHasAuthenticated(
-      true,
-      this.state.username,
-      compId,
-      companyName.companyName
-    );
+    this.props.dispatch(authActions.getMe());
   };
 
   render() {
-    const { showError } = this.state;
-
-    let companyList = this.state.companyList.map(company => {
-      return (
-        <option value={company.companyId} key={company.companyId}>
-          {company.companyName}
-        </option>
-      );
-    });
-
     return (
       <div className="Login">
         <MDBContainer>
@@ -168,22 +88,21 @@ export default class Login extends Component {
                         value={this.state.password}
                         onChange={this.handleChange}
                       />
-                      {/* </div> */}
 
                       {/* Hide if there's more than one company after logging in */}
-                      {!this.state.multipleCompany ? (
+                      {!this.props.multiCompany ? (
                         <LoaderButton
                           block
                           disabled={!this.validateForm()}
                           type="submit"
-                          isLoading={this.state.isLoading}
+                          isLoading={this.props.isLoading}
                           text="Login"
                           loadingText="Logging in…"
                         />
                       ) : null}
 
                       {/* Show if there's more than one company after logging in */}
-                      {this.state.multipleCompany ? (
+                      {this.props.multiCompany ? (
                         <div>
                           <select
                             className="browser-default custom-select"
@@ -194,7 +113,11 @@ export default class Login extends Component {
                             <option value="" disabled hidden>
                               Select Company
                             </option>
-                            {companyList}
+                            {this.props.companyList.map(company => (
+                              <option value={company.id} key={company.id}>
+                                {company.name}
+                              </option>
+                            ))}
                           </select>
                         </div>
                       ) : null}
@@ -208,7 +131,7 @@ export default class Login extends Component {
                   </MDBModalFooter>
                 </MDBCardBody>
               </MDBCard>
-              {showError && (
+              {this.props.showError && (
                 <div className="text-center">
                   <MDBAlert color="danger">
                     That username or password isn&apos;t recognized. Please try
@@ -223,3 +146,22 @@ export default class Login extends Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  const {
+    isAuthenticated,
+    showError,
+    isLoading,
+    multiCompany,
+    companyList
+  } = state.authentication;
+  return {
+    isAuthenticated,
+    showError,
+    isLoading,
+    multiCompany,
+    companyList
+  };
+}
+
+export default connect(mapStateToProps)(Login);

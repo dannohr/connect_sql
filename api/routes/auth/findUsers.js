@@ -3,10 +3,14 @@ const db = require("../../models/index");
 
 module.exports = app => {
   app.get("/me", (req, res, next) => {
+    let companyId = req.query.companyId;
+
     console.log("--------------------------------");
     console.log(req.params);
     console.log(req.query);
+    console.log("company id is ", companyId);
     console.log("--------------------------------");
+
     passport.authenticate("jwt", { session: false }, (err, user, info) => {
       if (err) {
         console.log(err);
@@ -19,12 +23,10 @@ module.exports = app => {
           include: [
             {
               model: db.UserCompany,
+              // required: true, // <-- JOIN to only return User where there is a matching UserCompany
               include: [
                 {
-                  model: db.Company,
-                  where: {
-                    id: req.query.companyId
-                  }
+                  model: db.Company
                 }
               ]
             }
@@ -32,18 +34,16 @@ module.exports = app => {
           where: {
             username: user.username
           }
-        }).then(userInfo => {
-          if (userInfo != null) {
+        }).then(user => {
+          if (user != null) {
             console.log("user found in db from findUsers");
-            // console.log(userInfo);
+            console.log(user.username);
             res.status(200).send({
               isAuthenticated: true,
-              firstName: userInfo.firstName,
-              lastName: userInfo.lastName,
-              email: userInfo.email,
-              username: userInfo.username,
-              message: "user found in db",
-              companyName: userInfo.UserCompanies[0].Company.name
+              username: user.username,
+              message: "user found & logged in",
+              company: user.UserCompanies,
+              companyId: companyId
             });
           } else {
             console.error("no user exists in db with that username");
