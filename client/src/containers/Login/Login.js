@@ -62,7 +62,7 @@ class Login extends Component {
             <MDBCol md="6">
               <MDBCard>
                 <MDBCardBody>
-                  <MDBCardHeader className="form-header winter-neva-gradient rounded">
+                  <MDBCardHeader className="form-header blue-grey lighten-5 rounded">
                     <h3 className="my-3">
                       <MDBIcon icon="lock" /> Login:
                     </h3>
@@ -98,6 +98,7 @@ class Login extends Component {
                           isLoading={this.props.isLoading}
                           text="Login"
                           loadingText="Logging in…"
+                          color="black"
                         />
                       ) : null}
 

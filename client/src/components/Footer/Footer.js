@@ -5,7 +5,7 @@ import "./Footer.css";
 const Footer = props => {
   return (
     <MDBFooter
-      color="blue"
+      color="elegant-color"
       className="fixed-bottom font-small text-center py-2 ml-3 mr-3"
     >
       <strong className="white-text">

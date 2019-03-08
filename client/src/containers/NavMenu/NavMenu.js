@@ -43,7 +43,7 @@ class NavMenu extends Component {
     return (
       <MDBContainer fluid>
         <MDBNavbar
-          color="info-color"
+          color="elegant-color-dark"
           dark
           expand="md"
           style={{ marginTop: "0px" }}
@@ -58,21 +58,33 @@ class NavMenu extends Component {
             {this.props.isAuthenticated ? (
               <Fragment>
                 <MDBNavbarNav left>
-                  <MDBNavItem active>
+                  <MDBNavItem>
                     <MDBNavLink to="#!">Home</MDBNavLink>
                   </MDBNavItem>
                   <MDBNavItem>
                     <MDBNavLink to="#!">Features</MDBNavLink>
                   </MDBNavItem>
                   <MDBNavItem>
-                    <MDBNavLink to="#!">Pricing</MDBNavLink>
+                    <MDBDropdown>
+                      <MDBDropdownToggle nav caret>
+                        <span>Quickbooks</span>
+                      </MDBDropdownToggle>
+                      <MDBDropdownMenu>
+                        <MDBNavLink to="/qblogin">
+                          <MDBDropdownItem>Login to QB</MDBDropdownItem>
+                        </MDBNavLink>
+                        <MDBDropdownItem>Action 2</MDBDropdownItem>
+                        <MDBDropdownItem>Action 3</MDBDropdownItem>
+                        <MDBDropdownItem>Action 4</MDBDropdownItem>
+                      </MDBDropdownMenu>
+                    </MDBDropdown>
                   </MDBNavItem>
                   <MDBNavItem>
                     <MDBDropdown>
                       <MDBDropdownToggle nav caret>
-                        <div className="d-none d-md-inline">Users</div>
+                        <span>Users</span>
                       </MDBDropdownToggle>
-                      <MDBDropdownMenu className="dropdown-default" right>
+                      <MDBDropdownMenu>
                         <MDBNavLink to="/user/all">
                           <MDBDropdownItem>View All Users</MDBDropdownItem>
                         </MDBNavLink>
@@ -87,10 +99,9 @@ class NavMenu extends Component {
                   <MDBNavItem>
                     <MDBDropdown>
                       <MDBDropdownToggle nav caret>
-                        <MDBIcon icon="user" className="mr-1" />
-                        Profile
+                        <MDBIcon icon="user" className="mr-2" />
                       </MDBDropdownToggle>
-                      <MDBDropdownMenu className="dropdown-default" right>
+                      <MDBDropdownMenu right>
                         <MDBDropdownItem>Edit Profile</MDBDropdownItem>
                         <MDBDropdownItem>Change Password</MDBDropdownItem>
                         <MDBDropdownItem divider />
