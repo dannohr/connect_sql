@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { authActions } from "./_actions/auth.actions";
-
+import { qbActions } from "./_actions/qb.actions";
 import "./App.css";
 import Routes from "./Routes";
 import NavMenu from "./containers/NavMenu/NavMenu";
@@ -24,10 +24,8 @@ class App extends Component {
     // this is checking to see is a user is already logged in
     const accessString = localStorage.getItem("JWT");
     const companyId = localStorage.getItem("companyId");
-    const QB = JSON.parse(localStorage.getItem("QB"));
 
     console.log("attempting to login to company ", companyId);
-    console.log(QB);
 
     if (accessString == null) {
       console.log("accessString is null");
@@ -40,6 +38,7 @@ class App extends Component {
       });
     } else {
       this.props.dispatch(authActions.getMe());
+      this.props.dispatch(qbActions.getCompany());
     }
   }
 
@@ -58,6 +57,8 @@ class App extends Component {
             <Footer
               username={this.props.username}
               companyName={this.props.companyLoggedIn.name}
+              qbConnected={this.props.qbConnected}
+              qbCompanyData={this.props.companyData}
             />
           ) : null}
         </div>
@@ -68,10 +69,13 @@ class App extends Component {
 
 function mapStateToProps(state) {
   const { isAuthenticated, companyLoggedIn, username } = state.authentication;
+  const { qbConnected, companyData } = state.qb;
   return {
     isAuthenticated,
     companyLoggedIn,
-    username
+    username,
+    qbConnected,
+    companyData
   };
 }
 

@@ -19,7 +19,7 @@ var Tools = function() {
 
   // Use a local copy for startup.  This will be updated in refreshEndpoints() to call:
   // https://developer.api.intuit.com/.well-known/openid_configuration/
-  this.openid_configuration = require("./openid_configuration.json");
+  this.openid_configuration = require("../../config/openid_configuration.json");
 
   // Should be called at app start & scheduled to run once a day
   // Get the latest OAuth/OpenID endpoints from Intuit
@@ -129,10 +129,8 @@ var Tools = function() {
     session.data = null;
   };
 
-  // Save token into session storage
-  // In a real use-case, this is where tokens would have to be persisted (to a
-  // a SQL DB, for example).  Both access tokens and refresh tokens need to be
-  // persisted.  This should typically be stored against a user / realm ID, as well.
+  // Save token into session storage .in SQL database.
+  // using SequelizeStore in server.js
   this.saveToken = function(session, token) {
     session.accessToken = token.accessToken;
     session.refreshToken = token.refreshToken;
@@ -142,7 +140,9 @@ var Tools = function() {
 
   // Get the token object from session storage
   this.getToken = function(session) {
-    if (!session.accessToken) return null;
+    if (!session.accessToken) {
+      return null;
+    }
 
     return tools.intuitAuth.createToken(
       session.accessToken,

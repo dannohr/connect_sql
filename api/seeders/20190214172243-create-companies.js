@@ -11,17 +11,27 @@ module.exports = {
       "Company",
       [
         {
-          name: "Company One",
+          name: "Sandbox Company_US_1",
           createdAt: new Date(),
           updatedAt: new Date()
         },
         {
-          name: "Company Two",
+          name: "Sandbox Company_US_2",
           createdAt: new Date(),
           updatedAt: new Date()
         },
         {
-          name: "Company Three",
+          name: "Sandbox Company_US_3",
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          name: "Sandbox Company_US_4",
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          name: "Sandbox Company_US_5",
           createdAt: new Date(),
           updatedAt: new Date()
         }

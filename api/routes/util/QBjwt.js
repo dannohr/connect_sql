@@ -1,7 +1,7 @@
 var atob = require("atob");
 var expect = require("expect");
 var request = require("request");
-var tools = require("./tools");
+var tools = require("../util/QBtools");
 var config = require("../../config/QBconfig.json");
 
 var JWT = function() {

@@ -1,49 +1,52 @@
 import { qbConstants } from "../_constants";
 
 const initialState = {
-  oauth2_token: {
-    x_refresh_token_expires_in: 0,
-    refresh_token: "",
-    access_token: "",
-    token_type: "",
-    expires_in: 0
-  }
+  qbConnected: false,
+  companyData: {}
 };
 
 export function qb(state = initialState, action) {
+  console.log(action);
   switch (action.type) {
     case qbConstants.LOGIN_REQUEST:
       return {
         isLoading: true,
-        user: action.user
+        qbConnected: false
       };
 
     case qbConstants.LOGIN_SUCCESS:
       return {
-        ...action.user
+        isLoading: false,
+        ...action.data,
+        companyData: {}
       };
 
     case qbConstants.LOGIN_FAILURE:
-      return {};
+      return { isLoading: false, qbConnected: false };
 
     case qbConstants.LOGOUT:
       return {
-        ...action.user
+        qbConnected: false
       };
 
-    case qbConstants.GETME_REQUEST:
+    case qbConstants.GETCOMPANY_REQUEST:
       return {
         loading: true
       };
 
-    case qbConstants.GETME_SUCCESS:
+    case qbConstants.GETCOMPANY_SUCCESS:
+      console.log(action);
       return {
-        ...action.users
+        isLoading: false,
+        qbConnected: true,
+        companyData: action.data
       };
 
-    case qbConstants.GETME_FAILURE:
+    case qbConstants.GETCOMPANY_FAILURE:
+      console.log("in failing in reducer");
       return {
-        error: action.error
+        isLoading: false,
+        qbConnected: false
       };
 
     default:

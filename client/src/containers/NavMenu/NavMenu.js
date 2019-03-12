@@ -73,8 +73,10 @@ class NavMenu extends Component {
                         <MDBNavLink to="/qblogin" className="m-0 p-0">
                           <MDBDropdownItem>Login to QB</MDBDropdownItem>
                         </MDBNavLink>
-                        <MDBDropdownItem>Action 2</MDBDropdownItem>
-                        <MDBDropdownItem>Action 3</MDBDropdownItem>
+                        <MDBNavLink to="/qbcustomers" className="m-0 p-0">
+                          <MDBDropdownItem>Customers</MDBDropdownItem>
+                        </MDBNavLink>
+                        <MDBDropdownItem>Vendors</MDBDropdownItem>
                         <MDBDropdownItem>Action 4</MDBDropdownItem>
                       </MDBDropdownMenu>
                     </MDBDropdown>

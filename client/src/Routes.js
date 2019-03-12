@@ -8,6 +8,7 @@ import Signup from "./containers/Signup/Signup";
 import AllUsers from "./containers/Users/AllUsers/AllUsers";
 import EditUser from "./containers/Users/EditUser/EditUser";
 import QBLogin from "./containers/QBLogin/QBLogin";
+import QBCustomers from "./containers/QBCustomers/QBCustomers";
 import AuthenticatedRoute from "./components/AuthenticatedRoute";
 import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
 // import { hasRole, isAllowed } from './util/auth';
@@ -44,6 +45,12 @@ export default ({ childProps }) => (
       path="/qblogin"
       exact
       component={QBLogin}
+      props={childProps}
+    />
+    <AuthenticatedRoute
+      path="/qbcustomers"
+      exact
+      component={QBCustomers}
       props={childProps}
     />
 

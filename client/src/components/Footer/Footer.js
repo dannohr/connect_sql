@@ -10,7 +10,8 @@ const Footer = props => {
     >
       <strong className="white-text">
         Signed in as: {props.username} {"   ("}
-        {props.companyName} {")"}
+        {props.companyName} {")         QB:"}{" "}
+        {props.qbConnected ? props.qbCompanyData.CompanyName : "not connected"}
       </strong>
     </MDBFooter>
   );

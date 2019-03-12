@@ -10,7 +10,7 @@ sequelize db:migrate --config config/sequelizeConfig.js
 sequelize db:migrate:undo
 sequelize db:migrate:undo:all --config config/sequelizeConfig.js
 
-# Data Migrations
+# Seed Tables
 
 seed:generate --name pick-any-name
 
