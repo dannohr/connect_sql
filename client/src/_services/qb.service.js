@@ -50,13 +50,15 @@ function getCallback(redirectUri) {
 }
 
 function logout() {
-  localStorage.removeItem("JWT");
-  localStorage.removeItem("companyId ");
-  return {
-    isAuthenticated: false,
-    showError: false,
-    isLoading: false
-  };
+  return axios
+    .get("/api/qb/revoke")
+    .then(res => {
+      console.log(res.data);
+      return res.data;
+    })
+    .catch(err => {
+      console.log(err);
+    });
 }
 
 function getCompany() {
@@ -67,7 +69,7 @@ function getCompany() {
         console.log(response.data);
         // return response.data;
       } else {
-        console.log(response.data);
+        // console.log(response.data);
         return response.data;
       }
       // return await response.data;
