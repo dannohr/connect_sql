@@ -99,6 +99,31 @@ var Tools = function() {
     });
   };
 
+  // Check if a token exists, used in the beginning of each Quickbooks
+  // api call
+  this.checkForToken = function(req, res, next) {
+    var token = tools.getToken(req.session);
+    if (!token) {
+      return res.status(401).send({ error: "Not authorized" });
+    } else if (!req.session.realmId) {
+      return res.status(401).send({
+        error:
+          "No realm ID.  QBO calls only work if the accounting scope was passed!"
+      });
+    } else {
+      console.log("have valid token");
+      let authHeaders = {
+        headers: {
+          Authorization: "Bearer " + token.accessToken,
+          "User-Agent": "my trial app",
+          Accept: "application/json",
+          "Content-Type": "application/text"
+        }
+      };
+      return authHeaders;
+    }
+  };
+
   this.setScopes = function(flowName) {
     authConfig.scopes = config.scopes[flowName];
     tools.intuitAuth = new ClientOAuth2(authConfig);

@@ -1,6 +1,7 @@
 import { qbConstants } from "../_constants";
 import { qbService } from "../_services";
 import { alertActions } from "./";
+import axios from "axios";
 
 export const qbActions = {
   login, //log in new user
@@ -90,21 +91,30 @@ function getAllCustomers() {
   return dispatch => {
     dispatch(request({ type: qbConstants.GETALLCUSTOMERS_REQUEST }));
 
-    qbService.getCompany().then(
-      data => {
-        // console.log(data);
-        // console.log(data.CompanyInfo);
-        if (data) {
+    let config = {
+      body: "Select * from Customer startposition 1 maxresults 500"
+    };
+    axios.post("/api/qb/query", config).then(
+      response => {
+        if (response) {
           dispatch(
-            success({ type: qbConstants.GETCOMPANY_SUCCESS }, data.CompanyInfo)
+            success(
+              { type: qbConstants.GETALLCUSTOMERS_SUCCESS },
+              response.data.QueryResponse
+            )
           );
         } else {
           console.log("failing");
-          failure({ type: qbConstants.GETCOMPANY_FAILURE }, "not working");
+          dispatch(
+            failure(
+              { type: qbConstants.GETALLCUSTOMERS_FAILURE },
+              "not working"
+            )
+          );
         }
       },
       error => {
-        dispatch(failure({ type: qbConstants.LOGIN_FAILURE }, error));
+        dispatch(failure({ type: qbConstants.GETALLCUSTOMERS_FAILURE }, error));
         dispatch(alertActions.error(error));
       }
     );

@@ -7,7 +7,7 @@ https://medium.freecodecamp.org/securing-node-js-restful-apis-with-json-web-toke
 
 sequelize db:migrate --config config/sequelizeConfig.js
 
-sequelize db:migrate:undo
+sequelize db:migrate:undo --config config/sequelizeConfig.js
 sequelize db:migrate:undo:all --config config/sequelizeConfig.js
 
 # Seed Tables

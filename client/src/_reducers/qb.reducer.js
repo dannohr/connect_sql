@@ -4,6 +4,7 @@ const initialState = {
   isLoading: false,
   qbConnected: false,
   companyData: {}
+  // customers: {}
 };
 
 export function qb(state = initialState, action) {
@@ -17,7 +18,6 @@ export function qb(state = initialState, action) {
       };
 
     case qbConstants.LOGIN_SUCCESS:
-      console.log(action);
       return {
         isLoading: false,
         ...action.data,
@@ -51,7 +51,6 @@ export function qb(state = initialState, action) {
       };
 
     case qbConstants.GETCOMPANY_SUCCESS:
-      // console.log(action);
       return {
         ...state,
         isLoading: false,
@@ -64,6 +63,28 @@ export function qb(state = initialState, action) {
         isLoading: false,
         qbConnected: false,
         companyData: {}
+      };
+
+    case qbConstants.GETALLCUSTOMERS_REQUEST:
+      return {
+        ...state,
+        isLoading: true
+      };
+
+    case qbConstants.GETALLCUSTOMERS_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        qbConnected: true,
+        customers: action.data
+      };
+
+    case qbConstants.GETALLCUSTOMERS_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+        qbConnected: false,
+        customers: null
       };
 
     default:

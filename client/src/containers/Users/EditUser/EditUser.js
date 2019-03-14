@@ -63,7 +63,7 @@ export default class EditUser extends Component {
     }
 
     //check if userId is a number, only make axios call if it is
-    if (userId == parseInt(userId)) {
+    if (userId === parseInt(userId)) {
       await axios
         .get("/user?userId=" + userId, {
           headers: { Authorization: `JWT ${accessString}` }

@@ -20,7 +20,7 @@ class App extends Component {
     };
   }
 
-  async componentDidMount() {
+  async componentWillMount() {
     // this is checking to see is a user is already logged in
     const accessString = localStorage.getItem("JWT");
     const companyId = localStorage.getItem("companyId");

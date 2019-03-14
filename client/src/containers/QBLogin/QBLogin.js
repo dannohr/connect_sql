@@ -8,9 +8,9 @@ import axios from "axios";
 import "./QBLogin.css";
 
 class QBLogin extends Component {
-  constructor(props) {
-    super(props);
-  }
+  // constructor(props) {
+  //   super(props);
+  // }
 
   handleLogin = e => {
     this.props.dispatch(qbActions.loginAndGetCompany());

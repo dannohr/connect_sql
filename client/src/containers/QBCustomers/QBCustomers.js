@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { qbActions } from "../../_actions";
-import { MDBDataTable } from "mdbreact";
-
-import axios from "axios";
+import { MDBDataTable, MDBBtn } from "mdbreact";
 
 import "./QBCustomers.css";
 
@@ -18,24 +16,14 @@ class QBCustomers extends Component {
   }
 
   componentDidMount() {
-    // console.log(this.props.qbConnected);
+    this.handleRefresh();
+  }
+
+  handleRefresh() {
+    console.log("qbConnected ", this.props.qbConnected);
     // if (this.props.qbConnected) {
-    //   console.log("trying to get customers");
-    //   let data = {
-    //     body: "Select * from Customer startposition 1 maxresults 500"
-    //   };
-    //   axios
-    //     .post("/api/qb/query", data)
-    //     .then(response => {
-    //       let data = this.createDataTable(response.data.QueryResponse.Customer);
-    //       console.log(data);
-    //       this.setState({ customerData: data });
-    //       console.log(this.state);
-    //     })
-    //     .catch(err => {
-    //       console.log(err);
-    //       // return res.json(err);
-    //     });
+    console.log("trying to get customers");
+    this.props.dispatch(qbActions.getAllCustomers());
     // }
   }
 
@@ -60,6 +48,20 @@ class QBCustomers extends Component {
           field: "SyncToken",
           sort: "asc",
           width: 270
+        },
+
+        {
+          label: "Balance",
+          field: "Balance",
+          sort: "asc",
+          width: 270
+        },
+
+        {
+          label: "Active",
+          field: "Active",
+          sort: "asc",
+          width: 270
         }
       ],
 
@@ -67,51 +69,53 @@ class QBCustomers extends Component {
         return {
           customerId: customer.Id,
           name: customer.DisplayName,
-          // city: customer.ShipAddr.City,
-          // state: customer.ShipAddr.CountySubDivisionCode,
-          SyncToken: customer.SyncToken
+          SyncToken: customer.SyncToken,
+          Balance: customer.Balance,
+          Active: customer.Active ? "yes" : "no"
         };
       })
     };
     return data;
   };
 
-  handleGet = e => {
-    this.props.dispatch(qbActions.getCompany());
-  };
-
-  handleGetCustomerInfo = async () => {
-    console.log("trying to get customers");
-    let data = {
-      body: "Select * from Customer startposition 1 maxresults 500"
-    };
-    axios
-      .post("/api/qb/query", data)
-      .then(response => {
-        console.log(response.data);
-      })
-      .catch(err => {
-        console.log(err);
-        // return res.json(err);
-      });
-  };
-
   render() {
+    let tableData = this.props.customers
+      ? this.createDataTable(this.props.customers.Customer)
+      : null;
+
     return (
       <div className="container">
         <div className="well text-center">
           <h1>Quickbooks Customers</h1>
         </div>
-        <MDBDataTable striped bordered hover data={this.state.customerData} />
+        <MDBBtn
+          outline
+          color="primary"
+          size="sm"
+          onClick={this.handleRefresh.bind(this)}
+        >
+          Refresh
+        </MDBBtn>
+        {tableData ? (
+          <MDBDataTable
+            striped
+            bordered
+            hover
+            data={tableData}
+            entries={10}
+            small
+          />
+        ) : null}
       </div>
     );
   }
 }
 
 function mapStateToProps(state) {
-  const { qbConnected } = state.qb;
+  const { qbConnected, customers } = state.qb;
   return {
-    qbConnected
+    qbConnected,
+    customers
   };
 }
 

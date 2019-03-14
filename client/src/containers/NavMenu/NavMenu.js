@@ -64,6 +64,25 @@ class NavMenu extends Component {
                   <MDBNavItem>
                     <MDBNavLink to="#!">Features</MDBNavLink>
                   </MDBNavItem>
+
+                  <MDBNavItem>
+                    <MDBDropdown>
+                      <MDBDropdownToggle nav caret>
+                        <span>Customer</span>
+                      </MDBDropdownToggle>
+                      <MDBDropdownMenu>
+                        <MDBNavLink to="/customer" className="m-0 p-0">
+                          <MDBDropdownItem>App Customers</MDBDropdownItem>
+                        </MDBNavLink>
+                        <MDBNavLink to="/qbcustomers" className="m-0 p-0">
+                          <MDBDropdownItem>QB Customers</MDBDropdownItem>
+                        </MDBNavLink>
+                        <MDBDropdownItem>Vendors</MDBDropdownItem>
+                        <MDBDropdownItem>Action 4</MDBDropdownItem>
+                      </MDBDropdownMenu>
+                    </MDBDropdown>
+                  </MDBNavItem>
+
                   <MDBNavItem>
                     <MDBDropdown>
                       <MDBDropdownToggle nav caret>

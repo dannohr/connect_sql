@@ -49,6 +49,9 @@ require("./routes/qb/getQuickbooksRefresh")(app);
 require("./routes/qb/company/getCompany")(app);
 require("./routes/qb/postQBquery")(app);
 
+require("./routes/customer/getCustomer")(app);
+require("./routes/customer/addCustomer")(app);
+
 // Connect To QuickBooks
 // This call will redirect to Intuit's authorization flow
 // var QBAuthController = require("./qb/routes/connect_to_quickbooks");
