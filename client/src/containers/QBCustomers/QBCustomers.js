@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { qbActions } from "../../_actions";
-import { MDBDataTable, MDBBtn } from "mdbreact";
+import { qbService } from "../../_services";
+import { MDBBtn, MDBAlert, MDBContainer, MDBRow, MDBCol } from "mdbreact";
 
 import "./QBCustomers.css";
+import CustomerTable from "../../components/CustomerTable/CustomerTable";
 
 class QBCustomers extends Component {
   constructor(props) {
@@ -20,91 +22,73 @@ class QBCustomers extends Component {
   }
 
   handleRefresh() {
-    console.log("qbConnected ", this.props.qbConnected);
-    // if (this.props.qbConnected) {
-    console.log("trying to get customers");
     this.props.dispatch(qbActions.getAllCustomers());
-    // }
   }
 
-  createDataTable = arr => {
-    let data = {
-      columns: [
-        {
-          label: "id",
-          field: "customerId",
-          sort: "asc",
-          width: 150
-        },
-        {
-          label: "name",
-          field: "name",
-          sort: "asc",
-          width: 270
-        },
+  handleCopyAllFromQuickbooks() {
+    console.log("Copying all customers from quickbooks to local database");
+    let allCustomers = this.props.customers.Customer;
+    console.log(allCustomers);
 
-        {
-          label: "SyncToken",
-          field: "SyncToken",
-          sort: "asc",
-          width: 270
-        },
+    //build an array with only the fields we're going to copy over
+    let allCustomerBody = [];
+    allCustomers.forEach(customer => {
+      allCustomerBody.push({
+        qbId: customer.Id,
+        Active: customer.Active,
+        Balance: customer.Balance,
+        CustomerName: customer.DisplayName,
+        SyncToken: customer.SyncToken
+      });
+    });
+    console.log(allCustomerBody);
 
-        {
-          label: "Balance",
-          field: "Balance",
-          sort: "asc",
-          width: 270
-        },
-
-        {
-          label: "Active",
-          field: "Active",
-          sort: "asc",
-          width: 270
-        }
-      ],
-
-      rows: arr.map((customer, index) => {
-        return {
-          customerId: customer.Id,
-          name: customer.DisplayName,
-          SyncToken: customer.SyncToken,
-          Balance: customer.Balance,
-          Active: customer.Active ? "yes" : "no"
-        };
-      })
-    };
-    return data;
-  };
+    qbService.copyQBdataToDB(allCustomerBody, "Customer");
+  }
 
   render() {
-    let tableData = this.props.customers
-      ? this.createDataTable(this.props.customers.Customer)
-      : null;
+    let alert = this.props.qbConnected ? (
+      <MDBContainer>
+        <MDBRow>
+          <MDBCol>
+            <MDBBtn
+              outline
+              color="primary"
+              size="sm"
+              onClick={this.handleRefresh.bind(this)}
+            >
+              Refresh
+            </MDBBtn>
+          </MDBCol>
+          <MDBCol>
+            <MDBBtn
+              outline
+              color="warning"
+              size="sm"
+              onClick={this.handleCopyAllFromQuickbooks.bind(this)}
+              className="float-right"
+            >
+              Copy all local
+            </MDBBtn>
+          </MDBCol>
+        </MDBRow>
+      </MDBContainer>
+    ) : (
+      <MDBAlert color="danger" className="text-center">
+        Login in to Quickbooks to access data
+      </MDBAlert>
+    );
 
     return (
       <div className="container">
         <div className="well text-center">
           <h1>Quickbooks Customers</h1>
         </div>
-        <MDBBtn
-          outline
-          color="primary"
-          size="sm"
-          onClick={this.handleRefresh.bind(this)}
-        >
-          Refresh
-        </MDBBtn>
-        {tableData ? (
-          <MDBDataTable
-            striped
-            bordered
-            hover
-            data={tableData}
-            entries={10}
-            small
-          />
+
+        {alert}
+
+        {this.props.customers ? (
+          <CustomerTable customerList={this.props.customers.Customer} />
         ) : null}
       </div>
     );
@@ -113,6 +97,7 @@ class QBCustomers extends Component {
 
 function mapStateToProps(state) {
   const { qbConnected, customers } = state.qb;
+
   return {
     qbConnected,
     customers

@@ -87,6 +87,28 @@ export function qb(state = initialState, action) {
         customers: null
       };
 
+    case qbConstants.GETONECUSTOMERS_REQUEST:
+      return {
+        ...state,
+        isLoading: true
+      };
+
+    case qbConstants.GETONECUSTOMERS_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        qbConnected: true,
+        customers: action.data
+      };
+
+    case qbConstants.GETONECUSTOMERS_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+        qbConnected: false,
+        customers: null
+      };
+
     default:
       return state;
   }

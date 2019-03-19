@@ -68,17 +68,18 @@ class NavMenu extends Component {
                   <MDBNavItem>
                     <MDBDropdown>
                       <MDBDropdownToggle nav caret>
-                        <span>Customer</span>
+                        <span>My App</span>
                       </MDBDropdownToggle>
                       <MDBDropdownMenu>
                         <MDBNavLink to="/customer" className="m-0 p-0">
-                          <MDBDropdownItem>App Customers</MDBDropdownItem>
+                          <MDBDropdownItem>Customers</MDBDropdownItem>
                         </MDBNavLink>
-                        <MDBNavLink to="/qbcustomers" className="m-0 p-0">
-                          <MDBDropdownItem>QB Customers</MDBDropdownItem>
+                        <MDBNavLink to="/vendor" className="m-0 p-0">
+                          <MDBDropdownItem>Vendors</MDBDropdownItem>
                         </MDBNavLink>
-                        <MDBDropdownItem>Vendors</MDBDropdownItem>
-                        <MDBDropdownItem>Action 4</MDBDropdownItem>
+                        <MDBNavLink to="/accounts" className="m-0 p-0">
+                          <MDBDropdownItem>Accounts</MDBDropdownItem>
+                        </MDBNavLink>
                       </MDBDropdownMenu>
                     </MDBDropdown>
                   </MDBNavItem>
@@ -93,10 +94,14 @@ class NavMenu extends Component {
                           <MDBDropdownItem>Login to QB</MDBDropdownItem>
                         </MDBNavLink>
                         <MDBNavLink to="/qbcustomers" className="m-0 p-0">
-                          <MDBDropdownItem>Customers</MDBDropdownItem>
+                          <MDBDropdownItem>QB Customers</MDBDropdownItem>
                         </MDBNavLink>
-                        <MDBDropdownItem>Vendors</MDBDropdownItem>
-                        <MDBDropdownItem>Action 4</MDBDropdownItem>
+                        <MDBNavLink to="/qbvendors" className="m-0 p-0">
+                          <MDBDropdownItem>QB Vendors</MDBDropdownItem>{" "}
+                        </MDBNavLink>
+                        <MDBNavLink to="/qbaccounts" className="m-0 p-0">
+                          <MDBDropdownItem>QB Accounts</MDBDropdownItem>{" "}
+                        </MDBNavLink>
                       </MDBDropdownMenu>
                     </MDBDropdown>
                   </MDBNavItem>

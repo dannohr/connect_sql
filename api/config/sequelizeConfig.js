@@ -6,12 +6,16 @@ module.exports = {
     host: "192.168.2.50",
     dialect: "mssql",
     dialectOptions: {
-      encrypt: true
+      encrypt: true,
+      options: {
+        requestTimeout: 60000,
+        port: 1433
+      }
     },
     define: {
       freezeTableName: true
     },
-    operatorsAliases: false,
+    // operatorsAliases: false,
     // seederStorageTableName: "SequelizeData",
     seederStorage: "sequelize",
     // seederStorage: "json",

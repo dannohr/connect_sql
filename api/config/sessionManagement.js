@@ -7,6 +7,8 @@ var mySessionStore = new SequelizeStore({
   db: db.sequelize
 });
 
+// this is saving session to database, so that it persists after server restarts
+
 module.exports = session({
   secret: "make a guess",
   store: mySessionStore,

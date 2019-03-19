@@ -4,7 +4,10 @@ export const qbService = {
   login,
   logout,
   getCompany,
-  postQBquery
+  postQBquery,
+  copyQBdataToDB,
+  getCustomers,
+  getCustomer
 };
 
 function login() {
@@ -72,7 +75,40 @@ function getCompany() {
         // console.log(response.data);
         return response.data;
       }
-      // return await response.data;
+    })
+    .catch(err => {
+      console.log(err);
+    });
+}
+
+function getCustomers() {
+  return axios
+    .get("/api/qb/customer")
+    .then(response => {
+      if (response.data.error === "Not authorized") {
+        console.log(response.data);
+        // return response.data;
+      } else {
+        // console.log(response.data);
+        return response.data;
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
+}
+
+function getCustomer(id) {
+  return axios
+    .get("/api/qb/customer/" + id)
+    .then(response => {
+      if (response.data.error === "Not authorized") {
+        console.log(response.data);
+        // return response.data;
+      } else {
+        // console.log(response.data);
+        return response.data;
+      }
     })
     .catch(err => {
       console.log(err);
@@ -80,7 +116,7 @@ function getCompany() {
 }
 
 function postQBquery(queryString) {
-  console.log("trying to get customers");
+  console.log("Querying QB data: ", queryString);
   let data = {
     body: queryString
   };
@@ -93,4 +129,24 @@ function postQBquery(queryString) {
       console.log(err);
       // return res.json(err);
     });
+}
+
+function copyQBdataToDB(bodyArr, qbTable) {
+  //bodyArr is an array of the quickbooks data to copy
+  //qbTable is the Quickbooks table, i.e. Customer, Vendor, etc.
+
+  console.log("Copying ", bodyArr, " from Quickbooks ", qbTable);
+
+  bodyArr.forEach(arr => {
+    return axios
+      .post("/api/add" + qbTable, arr)
+      .then(response => {
+        console.log(response.data);
+        return { data: response.data };
+      })
+      .catch(err => {
+        console.log(err);
+        // return res.json(err);
+      });
+  });
 }

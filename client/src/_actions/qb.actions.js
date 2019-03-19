@@ -8,7 +8,8 @@ export const qbActions = {
   logout, // log existing user out
   loginAndGetCompany,
   getCompany,
-  getAllCustomers
+  getAllCustomers,
+  postAllCustomersToDB // copy all Quickbooks customers to local db
 };
 
 function login() {
@@ -91,15 +92,55 @@ function getAllCustomers() {
   return dispatch => {
     dispatch(request({ type: qbConstants.GETALLCUSTOMERS_REQUEST }));
 
-    let config = {
-      body: "Select * from Customer startposition 1 maxresults 500"
-    };
-    axios.post("/api/qb/query", config).then(
+    return qbService.getCustomers().then(
       response => {
+        dispatch(
+          success(
+            { type: qbConstants.GETALLCUSTOMERS_SUCCESS },
+            response.QueryResponse
+          )
+        );
+      },
+      error => {
+        dispatch(failure({ type: qbConstants.GETALLCUSTOMER }, error));
+        dispatch(alertActions.error(error));
+      }
+    );
+  };
+}
+
+function getCustomer(id) {
+  return dispatch => {
+    dispatch(request({ type: qbConstants.GETONECUSTOMERS_REQUEST }));
+
+    return qbService.getCustomer(id).then(
+      response => {
+        dispatch(
+          success(
+            { type: qbConstants.GETONECUSTOMERS_SUCCESS },
+            response.QueryResponse
+          )
+        );
+      },
+      error => {
+        dispatch(failure({ type: qbConstants.GETONECUSTOMER }, error));
+        dispatch(alertActions.error(error));
+      }
+    );
+  };
+}
+
+function postAllCustomersToDB(config) {
+  return dispatch => {
+    dispatch(request({ type: qbConstants.POST_ALL_QB_CUSTOMER_TO_DB_REQUEST }));
+
+    axios
+      .post("/api/addCustomer", config)
+      .then(response => {
         if (response) {
           dispatch(
             success(
-              { type: qbConstants.GETALLCUSTOMERS_SUCCESS },
+              { type: qbConstants.POST_ALL_QB_CUSTOMER_TO_DB_SUCCESS },
               response.data.QueryResponse
             )
           );
@@ -107,16 +148,24 @@ function getAllCustomers() {
           console.log("failing");
           dispatch(
             failure(
-              { type: qbConstants.GETALLCUSTOMERS_FAILURE },
+              { type: qbConstants.POST_ALL_QB_CUSTOMER_TO_DB_FAILURE },
               "not working"
             )
           );
         }
-      },
-      error => {
-        dispatch(failure({ type: qbConstants.GETALLCUSTOMERS_FAILURE }, error));
-        dispatch(alertActions.error(error));
-      }
-    );
+      })
+      .catch(error => {
+        dispatch(
+          failure(
+            { type: qbConstants.POST_ALL_QB_CUSTOMER_TO_DB_FAILURE },
+            error
+          )
+        );
+        dispatch(
+          alertActions.error({
+            error: error
+          })
+        );
+      });
   };
 }

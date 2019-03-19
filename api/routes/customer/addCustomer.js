@@ -6,9 +6,11 @@ module.exports = app => {
     console.log(req.body);
 
     db.Customer.create({
+      qbId: req.body.qbId,
       CustomerName: req.body.CustomerName,
       Balance: req.body.Balance,
-      Active: req.body.Active
+      Active: req.body.Active,
+      SyncToken: req.body.SyncToken
     })
       .then(result => res.status(200).send(result))
       .catch(err => res.send(err));

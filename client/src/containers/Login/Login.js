@@ -48,6 +48,7 @@ class Login extends Component {
   };
 
   handleCompanySelect = e => {
+    console.log(e.target.value);
     let compId = Number(e.target.value);
 
     localStorage.setItem("companyId", compId);

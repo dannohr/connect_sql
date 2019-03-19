@@ -37,3 +37,16 @@ module.exports = app => {
     })(req, res, next);
   });
 };
+
+// router.get("/:id", (req, res) => {
+//   console.log("looking for id:", req.params.id);
+//   let query;
+//   if (req.params.id) {
+//     query = db.Company.findById(req.params.id);
+//   } else {
+//     query = db.Company.findAll();
+//   }
+//   return query.then(companies => {
+//     companies ? res.json(companies) : res.status(404).send("No company found.");
+//   });
+// });

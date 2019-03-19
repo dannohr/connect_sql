@@ -9,17 +9,12 @@ export const authService = {
 
 function login(username, password) {
   return axios
-    .post("/loginUser", {
+    .post("/api/login", {
       username,
       password
     })
     .then(response => {
-      let companyList = response.data.company.map(company => {
-        return {
-          name: company.Company.name,
-          id: company.Company.id
-        };
-      });
+      let companyList = response.data.company;
 
       let companyLoggedIn = {};
 
@@ -78,27 +73,20 @@ function logout() {
 function getMe() {
   const companyId = parseInt(localStorage.getItem("companyId"), 10);
   return axios
-    .get("/me?companyId=" + companyId, {
+    .get("/api/me?companyId=" + companyId, {
       headers: authHeader()
     })
     .then(response => {
-      let companyList = response.data.company.map(company => {
-        return {
-          name: company.Company.name,
-          id: company.Company.id
-        };
-      });
-
-      let companyLoggedIn = companyList.find(obj => obj.id === companyId);
-
-      let multiCompany = companyList.length > 1 ? true : false;
+      let companyLoggedIn = response.data.company;
+      let companyList = response.data.company;
+      let multiCompany = false;
 
       let loggedInUser = {
         isAuthenticated: response.data.isAuthenticated,
         username: response.data.username,
         multiCompany,
         companyLoggedIn,
-        companyList: companyList,
+        companyList,
         message: "user already logged in"
       };
 

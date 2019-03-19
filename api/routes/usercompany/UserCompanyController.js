@@ -5,7 +5,7 @@ var bodyParser = require("body-parser");
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
-const db = require("../models/index");
+const db = require("../../models/index");
 
 // GETS ALL USERS & COMPANIES
 router.get("/", function(req, res) {

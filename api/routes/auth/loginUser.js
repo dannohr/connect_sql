@@ -7,6 +7,8 @@ var tokenExpiresIn = 3600; //3600 =  1 hour, 86400 = 24 hours
 
 module.exports = app => {
   app.post("/loginUser", (req, res, next) => {
+    console.log(req.body);
+
     passport.authenticate("login", (err, users, info) => {
       if (err) {
         console.error(`error ${err}`);
