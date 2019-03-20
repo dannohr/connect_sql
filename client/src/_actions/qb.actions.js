@@ -63,6 +63,7 @@ function getCompany() {
     return qbService.getCompany().then(
       data => {
         if (data) {
+          console.log(data);
           dispatch(
             success({ type: qbConstants.GETCOMPANY_SUCCESS }, data.CompanyInfo)
           );

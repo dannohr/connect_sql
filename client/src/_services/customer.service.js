@@ -16,7 +16,7 @@ function getAllCustomers() {
         console.log(response.data);
         // return response.data;
       } else {
-        console.log(response.data);
+        console.log(response);
         return response.data;
       }
       // return await response.data;
